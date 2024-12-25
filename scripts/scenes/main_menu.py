@@ -2,14 +2,18 @@ import pygame
 from PIL import Image
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, DEFAULT_FONT
 import time
+import json
+import os
 
 
 class MainMenu:
     def __init__(self):
+        self.settings = Settings(self)
         self.font = pygame.font.Font(DEFAULT_FONT, 60)
-        self.title_text = 'Проклятый остров'
-        self.start_text = 'Нажмите Enter для продолжения'
-
+        self.title_text = self.settings.get_text('title')
+        self.start_text = self.settings.get_text('press_enter')
+        self.fullscreen = False
+        self.language = 'ru'
         self.button_texts = ['Начать игру', 'Настройки', 'Выход']
         self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
 
@@ -53,7 +57,9 @@ class MainMenu:
 
         self.game_started = False
 
-        self.settings = Settings()
+
+        self.settings = Settings(self)
+        self.update_button_texts()
 
     def load_gif(self, gif_path):
         gif = Image.open(gif_path)
@@ -64,6 +70,13 @@ class MainMenu:
             frames.append(frame_image)
         return frames
 
+    def update_button_texts(self):
+        self.button_texts = [
+            self.settings.get_text('start_game'),
+            self.settings.get_text('settings'),
+            self.settings.get_text('exit')
+        ]
+        self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
     def handle_mouse_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
 
@@ -74,10 +87,9 @@ class MainMenu:
             return
 
         if self.show_options_menu:
-
             option_texts = [
                 f"Звук: {int(self.settings.volume * 100)}%",
-                f"Полный экран: {'Да' if self.settings.fullscreen else 'Нет'}",
+                f"Смена языка: {self.settings.language}",
                 f"Автосохранение: {'Включено' if self.settings.autosave else 'Выключено'}",
                 f"Сложность: {self.settings.difficulty}"
             ]
@@ -99,14 +111,18 @@ class MainMenu:
 
                 if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
                     if pygame.mouse.get_pressed()[0]:
-                        if i == 0:
-                            self.settings.change_volume(0.1)
-                        elif i == 1:
-                            self.settings.toggle_fullscreen()
-                        elif i == 2:
-                            self.settings.toggle_autosave()
-                        elif i == 3:
-                            self.settings.change_difficulty()
+                        if current_time - self.last_click_time > self.click_delay:
+                            if i == 0:
+                                self.settings.change_volume(0.1)
+                            elif i == 1:
+
+                                new_language = 'en' if self.settings.language == 'ru' else 'ru'
+                                self.settings.change_language(new_language)
+                            elif i == 2:
+                                self.settings.toggle_autosave()
+                            elif i == 3:
+                                self.settings.change_difficulty()
+                            self.last_click_time = current_time
 
             back_label = self.font.render('Назад', True, (0, 0, 255))
             back_text_width = back_label.get_width()
@@ -119,13 +135,13 @@ class MainMenu:
 
             if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
                 if pygame.mouse.get_pressed()[0]:
-                    self.show_options_menu = False
-                    self.last_click_time = current_time
+                    if current_time - self.last_click_time > self.click_delay:
+                        self.show_options_menu = False
+                        self.last_click_time = current_time
 
-            return
+                    return
 
         else:
-
             for i, button_text in enumerate(self.button_texts):
                 button_rect = pygame.Rect(
                     SCREEN_WIDTH // 2 - self.background.get_width() // 2,
@@ -135,9 +151,10 @@ class MainMenu:
                 )
 
                 if button_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
-                    self.last_click_time = current_time
-                    self.execute_action(button_text)
-                    return
+                    if current_time - self.last_click_time > self.click_delay:
+                        self.last_click_time = current_time
+                        self.execute_action(button_text)
+                        return
 
     def display(self, surface):
         surface.fill((0, 0, 0))
@@ -178,6 +195,7 @@ class MainMenu:
                     for i, button in enumerate(self.buttons):
                         surface.blit(self.background, (SCREEN_WIDTH // 2 - self.background.get_width() // 2,
                                                        SCREEN_HEIGHT // 2 + i * (self.button_height + 20)))
+
 
                     mouse_x, mouse_y = pygame.mouse.get_pos()
 
@@ -234,15 +252,23 @@ class MainMenu:
         if button_text is None:
             button_text = self.button_texts[self.selected_button]
 
-        if button_text == 'Начать игру':
+        if button_text == self.button_texts[0]:
             print("Начинаем игру...")
             self.start_game()
-        elif button_text == 'Настройки':
+        elif button_text == self.button_texts[1]:
             print("Открываются настройки...")
             self.show_options_menu = True
-        elif button_text == 'Выход':
+        elif button_text == self.button_texts[2]:
             print("Выход из игры...")
             self.quit_game()
+
+    def update_button_texts(self):
+        self.button_texts = [
+            self.settings.get_text('start_game'),
+            self.settings.get_text('settings'),
+            self.settings.get_text('exit')
+        ]
+        self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
 
     def quit_game(self):
         print("Закрытие игры...")
@@ -252,90 +278,12 @@ class MainMenu:
     def start_game(self):
         pass
 
-    def handle_mouse_click(self, mouse_x, mouse_y):
-        current_time = pygame.time.get_ticks()
-
-        if not self.game_started:
-            return
-
-        if current_time - self.last_click_time < self.click_delay:
-            return
-
-        if self.show_options_menu:
-            option_texts = [
-                f"Звук: {int(self.settings.volume * 100)}%",
-                f"Полный экран: {'Да' if self.settings.fullscreen else 'Нет'}",
-                f"Автосохранение: {'Включено' if self.settings.autosave else 'Выключено'}",
-                f"Сложность: {self.settings.difficulty}"
-            ]
-
-            option_buttons = []
-            for i, option_text in enumerate(option_texts):
-                option_label = self.font.render(option_text, True, (0, 0, 255))
-
-                text_width = option_label.get_width()
-                text_height = option_label.get_height()
-
-                bg_width = text_width + 40
-                bg_height = text_height + 20
-
-                option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2
-                option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 30
-
-                option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height))
-
-                if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
-                    if pygame.mouse.get_pressed()[0]:
-                        if current_time - self.last_click_time > self.click_delay:
-                            if i == 0:
-                                self.settings.change_volume(0.1)
-                            elif i == 1:
-                                self.settings.toggle_fullscreen()
-                            elif i == 2:
-                                self.settings.toggle_autosave()
-                            elif i == 3:
-                                self.settings.change_difficulty()
-                            self.last_click_time = current_time
-
-            back_label = self.font.render('Назад', True, (0, 0, 255))
-            back_text_width = back_label.get_width()
-            back_text_height = back_label.get_height()
-
-            back_bg_width = back_text_width + 45
-            back_bg_height = back_text_height + 20
-            back_bg_x = SCREEN_WIDTH // 2 - back_bg_width // 2
-            back_bg_y = SCREEN_HEIGHT - back_bg_height - 360
-
-            if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
-                if pygame.mouse.get_pressed()[0]:
-                    if current_time - self.last_click_time > self.click_delay:
-                        self.show_options_menu = False
-                        self.last_click_time = current_time
-
-                return
-
-        else:
-
-            for i, button_text in enumerate(self.button_texts):
-                button_rect = pygame.Rect(
-                    SCREEN_WIDTH // 2 - self.background.get_width() // 2,
-                    SCREEN_HEIGHT // 2 + i * (self.button_height + 20),
-                    self.background.get_width(),
-                    self.background.get_height()
-                )
-
-                if button_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
-                    if current_time - self.last_click_time > self.click_delay:
-                        self.last_click_time = current_time
-                        self.execute_action(button_text)
-                        return
-
     def display_options_menu(self, surface):
         option_texts = [
-            f"Звук: {int(self.settings.volume * 100)}%",
-            f"Полный экран: {'Да' if self.settings.fullscreen else 'Нет'}",
-            f"Автосохранение: {'Включено' if self.settings.autosave else 'Выключено'}",
-            f"Сложность: {self.settings.difficulty}"
+            self.settings.get_text('volume', volume=int(self.settings.volume * 100)),
+            self.settings.get_text('change_language') + f": {self.settings.language.upper()}",
+            self.settings.get_text('autosave', status='Включено' if self.settings.autosave else 'Выключено'),
+            self.settings.get_text('difficulty', difficulty=self.settings.difficulty)
         ]
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -343,10 +291,8 @@ class MainMenu:
 
         for i, option_text in enumerate(option_texts):
             option_label = self.font.render(option_text, True, (0, 0, 255))
-
             text_width = option_label.get_width()
             text_height = option_label.get_height()
-
             bg_width = text_width + 40
             bg_height = text_height + 20
 
@@ -354,7 +300,6 @@ class MainMenu:
             option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 30
 
             option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height))
-
             button_bg = pygame.transform.scale(self.background, (bg_width, bg_height))
             surface.blit(button_bg, (option_bg_x, option_bg_y))
 
@@ -362,7 +307,7 @@ class MainMenu:
                 option_label = self.font.render(option_text, True, (255, 255, 255))
             surface.blit(option_label, (option_bg_x + 10, option_bg_y + 10))
 
-        back_label = self.font.render('Назад', True, (0, 0, 255))
+        back_label = self.font.render(self.settings.get_text('back'), True, (0, 0, 255))
         back_text_width = back_label.get_width()
         back_text_height = back_label.get_height()
 
@@ -374,66 +319,122 @@ class MainMenu:
         button_bg = pygame.transform.scale(self.background, (back_bg_width, back_bg_height))
         surface.blit(button_bg, (back_bg_x, back_bg_y))
 
-        if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
-            if pygame.mouse.get_pressed()[0]:
-                self.show_options_menu = False
-
-        if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
-            back_label = self.font.render('Назад', True, (255, 255, 255))
         surface.blit(back_label, (back_bg_x + 10, back_bg_y + 10))
 
+        if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
+            back_label = self.font.render(self.settings.get_text('back'), True, (255, 255, 255))
+            surface.blit(back_label, (back_bg_x + 10, back_bg_y + 10))
 
-import csv
-import os
+    def set_language(self, language):
+        self.settings.language = language
+        print(f"Язык изменен на: {language}")
+
+    def update_title_text(self):
+        self.title_text = self.settings.get_text('title')
+
+
 
 
 class Settings:
-    def __init__(self):
+    def __init__(self, main_menu_instance):
         self.volume = 1.0
         self.resolution = (SCREEN_WIDTH, SCREEN_HEIGHT)
         self.fullscreen = False
+        self.language = 'ru'
         self.autosave = True
         self.difficulty = 'Легко'
 
-        self.settings_file = 'config/game_settings.csv'
+        self.settings_file = 'config/game_settings.json'
+        self.text_file = f'localization/{self.language}.json'
+        self.main_menu = main_menu_instance
 
-        self.load_settings_from_csv()
+        self.load_settings_from_json()
+        self.load_texts_from_json()
 
-    def save_settings_to_csv(self):
-        with open(self.settings_file, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(['Volume', 'Fullscreen', 'Autosave', 'Difficulty'])
-            writer.writerow([self.volume, self.fullscreen, self.autosave, self.difficulty])
+    def load_texts_from_json(self):
+        if os.path.exists(self.text_file):
+            with open(self.text_file, mode='r', encoding='utf-8') as file:
+                self.text_data = json.load(file)
+        else:
+            raise FileNotFoundError(f"Текстовый файл для языка {self.language} не найден.")
 
-    def load_settings_from_csv(self):
+    def get_text(self, key, **kwargs):
+
+        text = self.text_data.get(key, "")
+
+
+        if 'status' in kwargs:
+            if self.language == 'ru':
+                status = 'Включено' if self.autosave else 'Выключено'
+            else:
+                status = 'Enabled' if self.autosave else 'Disabled'
+            kwargs['status'] = status
+
+        if 'difficulty' in kwargs:
+            if self.language == 'ru':
+                difficulty = self.difficulty
+            else:
+                difficulty_mapping = {
+                    'Легко': 'Easy',
+                    'Средне': 'Medium',
+                    'Трудно': 'Hard'
+                }
+                difficulty = difficulty_mapping.get(self.difficulty, self.difficulty)
+            kwargs['difficulty'] = difficulty
+
+        return text.format(**kwargs)
+
+    def save_settings_to_json(self):
+        settings_data = {
+            'volume': self.volume,
+            'autosave': self.autosave,
+            'difficulty': self.difficulty,
+            'language': self.language
+        }
+        with open(self.settings_file, mode='w', encoding='utf-8') as file:
+            json.dump(settings_data, file, ensure_ascii=False, indent=4)
+
+    def load_settings_from_json(self):
         if os.path.exists(self.settings_file):
-            with open(self.settings_file, mode='r', newline='', encoding='utf-8') as file:
-                reader = csv.reader(file)
-                next(reader)
-                for row in reader:
-                    if row:
-                        self.volume = float(row[0])
-                        self.fullscreen = row[1].lower() == 'true'
-                        self.autosave = row[2].lower() == 'true'
-                        self.difficulty = row[3]
+            with open(self.settings_file, mode='r', encoding='utf-8') as file:
+                settings_data = json.load(file)
+                self.volume = settings_data.get('volume', 1.0)
+                self.autosave = settings_data.get('autosave', True)
+                self.difficulty = settings_data.get('difficulty', 'Легко')
+                self.language = settings_data.get('language', 'ru')
+                self.text_file = f'localization/{self.language}.json'
+                self.load_texts_from_json()
+
+    def change_language(self, new_language):
+        self.language = new_language
+        self.text_file = f'localization/{self.language}.json'
+        self.load_texts_from_json()
+        self.save_settings_to_json()
+        self.main_menu.update_button_texts()
+        self.main_menu.update_title_text()
+        self.main_menu.show_main_menu = True
+
+    def update_main_menu_button_texts(self):
+        if hasattr(self, 'main_menu'):
+            self.main_menu.update_button_texts()
 
     def change_volume(self, amount=0.1):
         self.volume = max(0.0, min(1.0, self.volume + amount))
         pygame.mixer.music.set_volume(self.volume)
-        self.save_settings_to_csv()
+        self.save_settings_to_json()
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
         pygame.display.set_mode(self.resolution, pygame.FULLSCREEN if self.fullscreen else 0)
-        self.save_settings_to_csv()
+        self.save_settings_to_json()
 
     def toggle_autosave(self):
         self.autosave = not self.autosave
-        self.save_settings_to_csv()
+        self.save_settings_to_json()
 
     def change_difficulty(self):
         difficulties = ['Легко', 'Средне', 'Трудно']
         current_index = difficulties.index(self.difficulty)
         next_index = (current_index + 1) % len(difficulties)
         self.difficulty = difficulties[next_index]
-        self.save_settings_to_csv()
+        self.save_settings_to_json()
