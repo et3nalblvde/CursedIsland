@@ -8,9 +8,10 @@ import os
 
 class MainMenu:
     def __init__(self):
+        self.settings = Settings(self)
         self.font = pygame.font.Font(DEFAULT_FONT, 60)
-        self.title_text = 'Проклятый остров'
-        self.start_text = 'Нажмите Enter для продолжения'
+        self.title_text = self.settings.get_text('title')
+        self.start_text = self.settings.get_text('press_enter')
         self.fullscreen = False
         self.language = 'ru'
         self.button_texts = ['Начать игру', 'Настройки', 'Выход']
@@ -56,8 +57,9 @@ class MainMenu:
 
         self.game_started = False
 
-        # Передаем ссылку на MainMenu в Settings
+
         self.settings = Settings(self)
+        self.update_button_texts()
 
     def load_gif(self, gif_path):
         gif = Image.open(gif_path)
@@ -87,7 +89,7 @@ class MainMenu:
         if self.show_options_menu:
             option_texts = [
                 f"Звук: {int(self.settings.volume * 100)}%",
-                f"Смена языка",
+                f"Смена языка: {self.settings.language}",
                 f"Автосохранение: {'Включено' if self.settings.autosave else 'Выключено'}",
                 f"Сложность: {self.settings.difficulty}"
             ]
@@ -112,11 +114,10 @@ class MainMenu:
                         if current_time - self.last_click_time > self.click_delay:
                             if i == 0:
                                 self.settings.change_volume(0.1)
-                            elif i == 1:  # Смена языка
-                                # Переключение между языками
+                            elif i == 1:
+
                                 new_language = 'en' if self.settings.language == 'ru' else 'ru'
-                                self.settings.change_language(new_language)  # Меняем язык
-                                # Обновление текста на экране (вы можете добавить перерисовку меню)
+                                self.settings.change_language(new_language)
                             elif i == 2:
                                 self.settings.toggle_autosave()
                             elif i == 3:
@@ -251,22 +252,15 @@ class MainMenu:
         if button_text is None:
             button_text = self.button_texts[self.selected_button]
 
-        if button_text == 'Начать игру':
+        if button_text == self.button_texts[0]:
             print("Начинаем игру...")
             self.start_game()
-        elif button_text == 'Настройки':
+        elif button_text == self.button_texts[1]:
             print("Открываются настройки...")
             self.show_options_menu = True
-        elif button_text == 'Выход':
+        elif button_text == self.button_texts[2]:
             print("Выход из игры...")
             self.quit_game()
-        elif button_text == 'Смена языка':
-            # Изменяем язык и обновляем текст кнопок
-            new_language = 'en' if self.language == 'ru' else 'ru'
-            self.settings.change_language(new_language)
-            self.language = new_language  # Обновляем текущий язык
-            self.update_button_texts()  # Обновляем тексты кнопок
-            self.show_main_menu = False
 
     def update_button_texts(self):
         self.button_texts = [
@@ -287,7 +281,7 @@ class MainMenu:
     def display_options_menu(self, surface):
         option_texts = [
             self.settings.get_text('volume', volume=int(self.settings.volume * 100)),
-            self.settings.get_text('change_language'),
+            self.settings.get_text('change_language') + f": {self.settings.language.upper()}",
             self.settings.get_text('autosave', status='Включено' if self.settings.autosave else 'Выключено'),
             self.settings.get_text('difficulty', difficulty=self.settings.difficulty)
         ]
@@ -335,16 +329,10 @@ class MainMenu:
         self.settings.language = language
         print(f"Язык изменен на: {language}")
 
+    def update_title_text(self):
+        self.title_text = self.settings.get_text('title')
 
 
-
-import json
-
-import json
-import os
-
-import json
-import os
 
 
 class Settings:
@@ -358,13 +346,12 @@ class Settings:
 
         self.settings_file = 'config/game_settings.json'
         self.text_file = f'localization/{self.language}.json'
-        self.main_menu = main_menu_instance  # Передаем экземпляр MainMenu
+        self.main_menu = main_menu_instance
 
         self.load_settings_from_json()
         self.load_texts_from_json()
 
     def load_texts_from_json(self):
-        """Загружает текстовые данные для текущего языка."""
         if os.path.exists(self.text_file):
             with open(self.text_file, mode='r', encoding='utf-8') as file:
                 self.text_data = json.load(file)
@@ -372,22 +359,21 @@ class Settings:
             raise FileNotFoundError(f"Текстовый файл для языка {self.language} не найден.")
 
     def get_text(self, key, **kwargs):
-        """Получает текст для текущего языка и заменяет переменные."""
+
         text = self.text_data.get(key, "")
 
-        # Обрабатываем статус автосохранения
+
         if 'status' in kwargs:
             if self.language == 'ru':
                 status = 'Включено' if self.autosave else 'Выключено'
-            else:  # Если язык английский
+            else:
                 status = 'Enabled' if self.autosave else 'Disabled'
             kwargs['status'] = status
 
-        # Обрабатываем сложность игры
         if 'difficulty' in kwargs:
             if self.language == 'ru':
                 difficulty = self.difficulty
-            else:  # Если язык английский
+            else:
                 difficulty_mapping = {
                     'Легко': 'Easy',
                     'Средне': 'Medium',
@@ -399,7 +385,6 @@ class Settings:
         return text.format(**kwargs)
 
     def save_settings_to_json(self):
-        """Сохраняет настройки в JSON файл."""
         settings_data = {
             'volume': self.volume,
             'autosave': self.autosave,
@@ -410,7 +395,6 @@ class Settings:
             json.dump(settings_data, file, ensure_ascii=False, indent=4)
 
     def load_settings_from_json(self):
-        """Загружает настройки из JSON файла."""
         if os.path.exists(self.settings_file):
             with open(self.settings_file, mode='r', encoding='utf-8') as file:
                 settings_data = json.load(file)
@@ -422,15 +406,15 @@ class Settings:
                 self.load_texts_from_json()
 
     def change_language(self, new_language):
-        """Изменяет язык и загружает соответствующие текстовые данные."""
         self.language = new_language
         self.text_file = f'localization/{self.language}.json'
         self.load_texts_from_json()
-        self.save_settings_to_json()  # Сохраняем язык в настройках
-        self.main_menu.update_button_texts()  # Обновляем текст кнопок в главном меню
+        self.save_settings_to_json()
+        self.main_menu.update_button_texts()
+        self.main_menu.update_title_text()
+        self.main_menu.show_main_menu = True
 
     def update_main_menu_button_texts(self):
-        """Метод для обновления текста кнопок в главном меню."""
         if hasattr(self, 'main_menu'):
             self.main_menu.update_button_texts()
 
