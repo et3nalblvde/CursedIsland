@@ -1,0 +1,18 @@
+{
+  "title": "Проклятый остров",
+  "start_game": "Начать игру",
+  "settings": "Настройки",
+  "exit": "Выход",
+  "press_enter": "Нажмите Enter для продолжения",
+  "volume": "Звук: {volume}%",
+  "change_language": "Смена языка",
+  "autosave": "Автосохранение: {status}",
+  "difficulty": "Сложность: {difficulty}",
+  "back": "Назад",
+  "main_menu": {
+    "title": "Главное меню",
+    "start_game": "Начать игру",
+    "settings": "Настройки",
+    "exit": "Выход"
+  }
+}
