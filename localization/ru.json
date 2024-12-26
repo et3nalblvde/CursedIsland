@@ -1,6 +1,6 @@
 {
   "title": "Проклятый остров",
-  "start_game": "Начать игру",
+  "start_game": "Новая игра",
   "settings": "Настройки",
   "exit": "Выход",
   "press_enter": "Нажмите Enter для продолжения",
@@ -9,10 +9,12 @@
   "autosave": "Автосохранение: {status}",
   "difficulty": "Сложность: {difficulty}",
   "back": "Назад",
+  "continue": "Продолжить",
   "main_menu": {
     "title": "Главное меню",
-    "start_game": "Начать игру",
+    "start_game": "Новая игра",
     "settings": "Настройки",
-    "exit": "Выход"
+    "exit": "Выход",
+    "continue": "Продолжить"
   }
 }

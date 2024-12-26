@@ -8,7 +8,7 @@ SCREEN_WIDTH = screen_info.current_w
 SCREEN_HEIGHT = screen_info.current_h
 
 FULLSCREEN = False
-
+DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN if FULLSCREEN else 0)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
