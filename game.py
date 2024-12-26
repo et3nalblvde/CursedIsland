@@ -4,7 +4,7 @@ from __init__ import *
 pygame.init()
 
 
-
+pygame.display.set_caption("Cursed Island")
 def main():
     clock = pygame.time.Clock()
 

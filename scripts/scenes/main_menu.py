@@ -7,6 +7,7 @@ import os
 from scripts.locations.cabin import start_game_in_cabin
 from settings import DISPLAYSURF
 
+
 class MainMenu:
     def __init__(self):
         self.settings = Settings(self)
@@ -15,7 +16,7 @@ class MainMenu:
         self.start_text = self.settings.get_text('press_enter')
         self.fullscreen = False
         self.language = 'ru'
-        self.button_texts = ['Продолжить','Начать игру', 'Настройки', 'Выход']
+        self.button_texts = ['Продолжить', 'Начать игру', 'Настройки', 'Выход']
         self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
 
         self.button_width = max(button.get_width() for button in self.buttons)
@@ -57,7 +58,6 @@ class MainMenu:
         self.click_delay = 200
 
         self.game_started = False
-
 
         self.settings = Settings(self)
         self.update_button_texts()
@@ -107,13 +107,11 @@ class MainMenu:
                 bg_width = text_width + 40
                 bg_height = text_height + 20
 
-                # Координаты для каждой кнопки настроек
                 option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2
                 option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 30
 
                 option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height, i))
 
-                # Обработка кликов по кнопкам настроек
                 if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
                     if pygame.mouse.get_pressed()[0]:
                         if current_time - self.last_click_time > self.click_delay:
@@ -128,7 +126,6 @@ class MainMenu:
                                 self.settings.change_difficulty()
                             self.last_click_time = current_time
 
-            # Обработка кнопки "Назад"
             back_label = self.font.render('Назад', True, (0, 0, 255))
             back_text_width = back_label.get_width()
             back_text_height = back_label.get_height()
@@ -147,13 +144,12 @@ class MainMenu:
                     return
 
         else:
-            # Основное меню
             button_coords = []
             button_y_offset = 40
             for i, button_text in enumerate(self.button_texts):
                 button_rect = pygame.Rect(
                     SCREEN_WIDTH // 2 - self.background.get_width() // 2,
-                    SCREEN_HEIGHT // 2 + i * (self.button_height + 20)+ button_y_offset,
+                    SCREEN_HEIGHT // 2 + i * (self.button_height + 20) + button_y_offset,
                     self.background.get_width(),
                     self.background.get_height()
                 )
@@ -353,7 +349,6 @@ class MainMenu:
         self.title_text = self.settings.get_text('title')
 
 
-
 class Settings:
     def __init__(self, main_menu_instance):
         self.volume = 1.0
@@ -380,7 +375,6 @@ class Settings:
     def get_text(self, key, **kwargs):
 
         text = self.text_data.get(key, "")
-
 
         if 'status' in kwargs:
             if self.language == 'ru':
