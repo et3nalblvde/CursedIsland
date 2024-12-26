@@ -5,7 +5,7 @@ import json
 class DialogueBox:
     def __init__(self, font, display_dialogues=True):
         self.font = pygame.font.Font(font, 48)
-        self.display_dialogues =
+        self.display_dialogues =display_dialogues
 
         self.language = self.load_language_setting()
 
