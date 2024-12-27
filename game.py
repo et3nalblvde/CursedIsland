@@ -1,10 +1,10 @@
 import pygame
-
+from settings import *
 from __init__ import *
 pygame.init()
 
-DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN if FULLSCREEN else 0)
 
+pygame.display.set_caption("Cursed Island")
 def main():
     clock = pygame.time.Clock()
 

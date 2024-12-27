@@ -8,7 +8,7 @@ SCREEN_WIDTH = screen_info.current_w
 SCREEN_HEIGHT = screen_info.current_h
 
 FULLSCREEN = False
-
+DISPLAYSURF = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN if FULLSCREEN else 0)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -16,7 +16,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-
+MENU_MUSIC_PATH = "audio/music/menu_theme.mp3"
 ASSETS_DIR = "assets/"
 IMAGES_DIR = ASSETS_DIR + "images/"
 AUDIO_DIR = ASSETS_DIR + "audio/"

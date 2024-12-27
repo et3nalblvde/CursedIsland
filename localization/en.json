@@ -1,6 +1,6 @@
 {
   "title": "Cursed Island",
-  "start_game": "Start Game",
+  "start_game": "New Game",
   "settings": "Settings",
   "exit": "Exit",
   "press_enter": "Press Enter to continue",
@@ -9,10 +9,12 @@
   "autosave": "Autosave: {status}",
   "difficulty": "Difficulty: {difficulty}",
   "back": "Back",
+  "continue": "Continue",
   "main_menu": {
     "title": "Main Menu",
-    "start_game": "Start Game",
+    "start_game": "New Game",
     "settings": "Settings",
-    "exit": "Exit"
+    "exit": "Exit",
+    "continue": "Continue"
   }
 }

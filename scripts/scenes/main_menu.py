@@ -4,6 +4,8 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT, WHITE, DEFAULT_FONT
 import time
 import json
 import os
+from scripts.locations.cabin import start_game_in_cabin
+from settings import DISPLAYSURF
 
 
 class MainMenu:
@@ -14,7 +16,7 @@ class MainMenu:
         self.start_text = self.settings.get_text('press_enter')
         self.fullscreen = False
         self.language = 'ru'
-        self.button_texts = ['Начать игру', 'Настройки', 'Выход']
+        self.button_texts = ['Продолжить', 'Начать игру', 'Настройки', 'Выход']
         self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
 
         self.button_width = max(button.get_width() for button in self.buttons)
@@ -40,9 +42,13 @@ class MainMenu:
 
         self.clock = pygame.time.Clock()
 
+        pygame.mixer.init()
+        self.menu_music_path = "audio/music/menu_theme.mp3"
+        self.music_playing = False
+        self.music_delay = 100
         self.show_main_menu = False
         self.show_options_menu = False
-
+        self.music_start_time = None
         self.selected_button = 0
 
         self.last_text_update = pygame.time.get_ticks()
@@ -57,7 +63,6 @@ class MainMenu:
 
         self.game_started = False
 
-
         self.settings = Settings(self)
         self.update_button_texts()
 
@@ -70,13 +75,31 @@ class MainMenu:
             frames.append(frame_image)
         return frames
 
+    def play_menu_music(self):
+        current_time = pygame.time.get_ticks()
+        if self.music_start_time is None:
+            self.music_start_time = current_time
+
+        if current_time - self.music_start_time >= self.music_delay:
+            if not self.music_playing:
+                pygame.mixer.music.load(self.menu_music_path)
+                pygame.mixer.music.play(-1)
+                self.music_playing = True
+
+    def stop_menu_music(self):
+        if self.music_playing:
+            pygame.mixer.music.stop()
+            self.music_playing = False
+
     def update_button_texts(self):
         self.button_texts = [
+            self.settings.get_text('continue'),
             self.settings.get_text('start_game'),
             self.settings.get_text('settings'),
             self.settings.get_text('exit')
         ]
         self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
+
     def handle_mouse_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
 
@@ -107,7 +130,7 @@ class MainMenu:
                 option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2
                 option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 30
 
-                option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height))
+                option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height, i))
 
                 if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
                     if pygame.mouse.get_pressed()[0]:
@@ -115,7 +138,6 @@ class MainMenu:
                             if i == 0:
                                 self.settings.change_volume(0.1)
                             elif i == 1:
-
                                 new_language = 'en' if self.settings.language == 'ru' else 'ru'
                                 self.settings.change_language(new_language)
                             elif i == 2:
@@ -142,23 +164,33 @@ class MainMenu:
                     return
 
         else:
+            button_coords = []
+            button_y_offset = 40
             for i, button_text in enumerate(self.button_texts):
                 button_rect = pygame.Rect(
                     SCREEN_WIDTH // 2 - self.background.get_width() // 2,
-                    SCREEN_HEIGHT // 2 + i * (self.button_height + 20),
+                    SCREEN_HEIGHT // 2 + i * (self.button_height + 20) + button_y_offset,
                     self.background.get_width(),
                     self.background.get_height()
                 )
 
+                button_coords.append((button_rect, button_text))
+
+            for button_rect, button_text in button_coords:
                 if button_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
                     if current_time - self.last_click_time > self.click_delay:
                         self.last_click_time = current_time
+                        if button_text == 'Продолжить':
+                            pass
+                        elif button_text == 'Начать игру':
+                            self.start_game()
+                        elif button_text == 'Выход':
+                            self.quit_game()
                         self.execute_action(button_text)
                         return
 
     def display(self, surface):
         surface.fill((0, 0, 0))
-
         current_frame_resized = pygame.transform.scale(self.frames[self.current_frame], (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(current_frame_resized, (0, 0))
 
@@ -168,7 +200,8 @@ class MainMenu:
             self.alpha = 255 - (fade_elapsed / self.fade_duration) * 255
         else:
             self.alpha = 0
-
+        if not self.music_playing and not self.game_started:
+            self.play_menu_music()
         fade_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         fade_surface.fill((0, 0, 0))
         fade_surface.set_alpha(self.alpha)
@@ -192,17 +225,19 @@ class MainMenu:
                     surface.blit(self.font.render(self.title_text, True, WHITE),
                                  (SCREEN_WIDTH // 2 - self.font.size(self.title_text)[0] // 2, SCREEN_HEIGHT // 3))
 
+
+                    y_offset = 70
+
                     for i, button in enumerate(self.buttons):
                         surface.blit(self.background, (SCREEN_WIDTH // 2 - self.background.get_width() // 2,
-                                                       SCREEN_HEIGHT // 2 + i * (self.button_height + 20)))
-
+                                                       SCREEN_HEIGHT // 2 + i * (self.button_height + 20) - y_offset))
 
                     mouse_x, mouse_y = pygame.mouse.get_pos()
 
                     for i, button in enumerate(self.buttons):
                         button_rect = pygame.Rect(
                             SCREEN_WIDTH // 2 - self.background.get_width() // 2,
-                            SCREEN_HEIGHT // 2 + i * (self.button_height + 20),
+                            SCREEN_HEIGHT // 2 + i * (self.button_height + 20) - y_offset,
                             self.background.get_width(),
                             self.background.get_height()
                         )
@@ -210,7 +245,7 @@ class MainMenu:
                         button_color = (255, 255, 255) if button_rect.collidepoint(mouse_x, mouse_y) else (0, 0, 255)
                         button_text = self.font.render(self.button_texts[i], True, button_color)
                         surface.blit(button_text, (SCREEN_WIDTH // 2 - button_text.get_width() // 2,
-                                                   SCREEN_HEIGHT // 2 + i * (self.button_height + 20)))
+                                                   SCREEN_HEIGHT // 2 + i * (self.button_height + 20) - y_offset))
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         self.cursor_rect.topleft = (mouse_x, mouse_y)
@@ -225,7 +260,6 @@ class MainMenu:
                 if not self.game_started:
                     if event.key == pygame.K_RETURN:
                         self.game_started = True
-                        print("Игра начинается...")
                         self.show_main_menu = True
                     return
 
@@ -248,22 +282,21 @@ class MainMenu:
 
         self.handle_mouse_click(mouse_x, mouse_y)
 
+
     def execute_action(self, button_text=None):
         if button_text is None:
             button_text = self.button_texts[self.selected_button]
 
         if button_text == self.button_texts[0]:
-            print("Начинаем игру...")
             self.start_game()
         elif button_text == self.button_texts[1]:
-            print("Открываются настройки...")
             self.show_options_menu = True
         elif button_text == self.button_texts[2]:
-            print("Выход из игры...")
             self.quit_game()
 
     def update_button_texts(self):
         self.button_texts = [
+            self.settings.get_text('continue'),
             self.settings.get_text('start_game'),
             self.settings.get_text('settings'),
             self.settings.get_text('exit')
@@ -271,12 +304,12 @@ class MainMenu:
         self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
 
     def quit_game(self):
-        print("Закрытие игры...")
         pygame.quit()
         quit()
 
     def start_game(self):
-        pass
+        self.stop_menu_music()
+        start_game_in_cabin(DISPLAYSURF)
 
     def display_options_menu(self, surface):
         option_texts = [
@@ -327,12 +360,9 @@ class MainMenu:
 
     def set_language(self, language):
         self.settings.language = language
-        print(f"Язык изменен на: {language}")
 
     def update_title_text(self):
         self.title_text = self.settings.get_text('title')
-
-
 
 
 class Settings:
@@ -361,7 +391,6 @@ class Settings:
     def get_text(self, key, **kwargs):
 
         text = self.text_data.get(key, "")
-
 
         if 'status' in kwargs:
             if self.language == 'ru':

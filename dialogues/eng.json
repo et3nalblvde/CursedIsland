@@ -1,0 +1,104 @@
+{
+  "dialogs": [
+    {
+      "id": 1,
+      "character": "Protagonist",
+      "text": "All these long years of trading at sea..."
+    },
+    {
+      "id": 2,
+      "character": "Protagonist",
+      "text": "How many countries have I visited, how many goods have I brought and sold? This is not just a job — it's a life that flows through me with every new voyage."
+    },
+    {
+      "id": 3,
+      "character": "Protagonist",
+      "text": "But every time I look at the horizons, I feel the world becoming a little smaller. And again, a new path, new ports."
+    },
+    {
+      "id": 4,
+      "character": "Protagonist",
+      "text": "Perhaps this trip will be like all the previous ones. Maybe even better."
+    },
+    {
+      "id": 5,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "A life of a merchant on a ship is a constant journey from one port to another. Each voyage, like a new stage..."
+    },
+    {
+      "id": 6,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "But I never thought that one day this journey would lead me to such an end. The winds have always been my allies, and the sea — an unknown, but familiar friend."
+    },
+    {
+      "id": 7,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "What could have gone wrong?"
+    },
+    {
+      "id": 8,
+      "character": "Captain",
+      "text": "Everyone on deck! A storm is coming, prepare for the worst!"
+    },
+    {
+      "id": 9,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "The clouds began to gather, and the air became heavy. At first, it was just occasional lightning strikes on the horizon, but now..."
+    },
+    {
+      "id": 10,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "We didn’t expect the storm to be so powerful. The dark clouds began to cover the sun, and the sea seemed to go mad, showing no mercy."
+    },
+    {
+      "id": 11,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "I’ve never seen anything like it."
+    },
+    {
+      "id": 12,
+      "character": "Protagonist",
+      "text": "What’s happening? Why can't the captain deal with this? Will we be safe?"
+    },
+    {
+      "id": 13,
+      "character": "Captain",
+      "text": "The captain can’t control the elements. If this storm doesn’t swallow us, the rocks on the horizon will definitely do their job."
+    },
+    {
+      "id": 14,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "Lightning struck so close that I felt as if the ocean itself was about to swallow us. I felt the ship jerk, and at that moment, I realized — we won’t make it."
+    },
+    {
+      "id": 15,
+      "character": "Protagonist",
+      "text": "We won’t survive! Goodbye, world!"
+    },
+    {
+      "id": 16,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "The last thing I remember is the strike that tore everything apart. Water rushed into the cabin, and then darkness consumed me."
+    },
+    {
+      "id": 17,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "I lost consciousness."
+    },
+    {
+      "id": 18,
+      "character": "Protagonist",
+      "type": "internal_monologue",
+      "text": "I’m alive... How did I survive? Where is everyone else? I must find answers before this place consumes me, just like it did with my ship."
+    }
+  ]
+}
