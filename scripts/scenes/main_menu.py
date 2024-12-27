@@ -21,8 +21,8 @@ class MainMenu:
 
         self.button_width = max(button.get_width() for button in self.buttons)
         self.button_height = self.buttons[0].get_height()
- # Экран, передаваемый в конструктор
-        self.x_offset = 0  # Переменная для смещения по оси X
+
+        self.x_offset = 0
         self.y_offset = -110
         self.x_show=0
         self.y_show=-360
@@ -62,8 +62,8 @@ class MainMenu:
         self.last_back_click_time = 0
         self.back_click_delay = 200
 
-        self.last_click_time = pygame.time.get_ticks()  # Инициализация времени последнего клика
-        self.click_delay = 200  # Задержка между кликами
+        self.last_click_time = pygame.time.get_ticks()
+        self.click_delay = 200
 
         self.game_started = False
 
@@ -124,27 +124,22 @@ class MainMenu:
             button_y_offset = 40
 
             for i, button_text in enumerate(self.button_texts):
-                # Управление позицией кнопок главного меню с учетом смещения
                 button_rect = pygame.Rect(
                     SCREEN_WIDTH // 2 - self.background.get_width() // 2 + self.x_offset,
-                    # Центр по оси X с учетом смещения
                     SCREEN_HEIGHT // 2 + i * (self.button_height + 20) + button_y_offset + self.y_offset,
-                    # Позиция по оси Y с учетом смещения
                     self.background.get_width(),
                     self.background.get_height()
                 )
 
                 button_coords.append((button_rect, button_text))
 
-                # Отображение прямоугольника для отладки
-                pygame.draw.rect(self.screen, (255, 0, 0), button_rect, 2)  # Красный контур
+                pygame.draw.rect(self.screen, (255, 0, 0), button_rect, 2)
 
             for button_rect, button_text in button_coords:
                 if button_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
                     if current_time - self.last_click_time > self.click_delay:
-                        self.last_click_time = current_time  # Обновляем время последнего клика
+                        self.last_click_time = current_time
 
-                        # Обработчик команды для кнопки
                         if button_text == 'Продолжить':
                             pass
                         elif button_text == 'Начать игру':
@@ -158,10 +153,10 @@ class MainMenu:
     def handle_options_menu_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
 
-        if current_time - self.last_click_time < 200:  # Чтобы избежать двойных кликов
+        if current_time - self.last_click_time < 200:
             return
 
-        # Кнопки настроек
+
         option_texts = [
             f"Звук: {int(self.settings.volume * 100)}%",
             f"Смена языка: {self.settings.language}",
@@ -169,31 +164,31 @@ class MainMenu:
             f"Сложность: {self.settings.difficulty}"
         ]
 
-        option_buttons = []  # Список для кнопок настроек
+        option_buttons = []
 
-        # Управление кнопками настроек с локальными переменными для координат
+
         for i, option_text in enumerate(option_texts):
             option_label = self.font.render(option_text, True, (0, 0, 255))
 
             text_width = option_label.get_width()
             text_height = option_label.get_height()
 
-            # Локальные переменные для размеров кнопок и их позиции
+
             bg_width = text_width + 40
             bg_height = text_height + 20
 
-            # Использование переменных x_show и y_show для управления позициями кнопок
-            option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2 + self.x_show  # Центр по оси X с учетом смещения
-            option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 400 + self.y_show  # Позиция по оси Y
 
-            # Добавляем кнопку в список
+            option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2 + self.x_show
+            option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 400 + self.y_show
+
+
             option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height, i))
 
-            # Отображение прямоугольника для отладки
-            pygame.draw.rect(self.screen, (255, 0, 0), (option_bg_x, option_bg_y, bg_width, bg_height),
-                             2)  # Красный контур
 
-            # Проверка клика на кнопку
+            pygame.draw.rect(self.screen, (255, 0, 0), (option_bg_x, option_bg_y, bg_width, bg_height),
+                             2)
+
+
             if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
                 if pygame.mouse.get_pressed()[0]:
                     if current_time - self.last_click_time > self.click_delay:
@@ -206,9 +201,9 @@ class MainMenu:
                             self.settings.toggle_autosave()
                         elif i == 3:
                             self.settings.change_difficulty()
-                        self.last_click_time = current_time  # Обновляем время последнего клика
+                        self.last_click_time = current_time
 
-        # Кнопка "Назад"
+
         back_label = self.font.render('Назад', True, (0, 0, 255))
         back_text_width = back_label.get_width()
         back_text_height = back_label.get_height()
@@ -216,20 +211,20 @@ class MainMenu:
         back_bg_width = back_text_width + 45
         back_bg_height = back_text_height + 20
 
-        # Локальные переменные для кнопки "Назад"
-        back_bg_x = SCREEN_WIDTH // 2 - back_bg_width // 2 + self.x_show  # Центр по оси X с учетом смещения
-        back_bg_y = SCREEN_HEIGHT - back_bg_height  + self.y_show  # Позиция по оси Y с учетом смещения
 
-        # Отображение прямоугольника для отладки
+        back_bg_x = SCREEN_WIDTH // 2 - back_bg_width // 2 + self.x_show
+        back_bg_y = SCREEN_HEIGHT - back_bg_height  + self.y_show
+
+
         pygame.draw.rect(self.screen, (255, 0, 0), (back_bg_x, back_bg_y, back_bg_width, back_bg_height),
-                         2)  # Красный контур
+                         2)
 
-        # Проверка клика на кнопку "Назад"
+
         if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
             if pygame.mouse.get_pressed()[0]:
                 if current_time - self.last_click_time > self.click_delay:
                     self.show_options_menu = False
-                    self.last_click_time = current_time  # Обновляем время последнего клика
+                    self.last_click_time = current_time
 
     def display(self, surface):
         surface.fill((0, 0, 0))
@@ -263,8 +258,8 @@ class MainMenu:
 
                 if self.show_options_menu:
                     self.display_options_menu(surface)
-                    mouse_x, mouse_y = pygame.mouse.get_pos()  # Получаем координаты мыши
-                    self.handle_options_menu_click(mouse_x, mouse_y)  # Обрабатываем клики в меню настроек
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    self.handle_options_menu_click(mouse_x, mouse_y)
                 else:
                     surface.blit(self.font.render(self.title_text, True, WHITE),
                                  (SCREEN_WIDTH // 2 - self.font.size(self.title_text)[0] // 2, SCREEN_HEIGHT // 3))
@@ -329,13 +324,13 @@ class MainMenu:
         if button_text is None:
             button_text = self.button_texts[self.selected_button]
 
-        if button_text == self.button_texts[0]:  # Кнопка "Продолжить"
-            pass  # Добавьте метод продолжения игры
-        elif button_text == self.button_texts[1]:  # Кнопка "Начать игру"
+        if button_text == self.button_texts[0]:
+            pass
+        elif button_text == self.button_texts[1]:
             self.start_game()
-        elif button_text == self.button_texts[2]:  # Кнопка "Настройки"
+        elif button_text == self.button_texts[2]:
             self.show_options_menu = True
-        elif button_text == self.button_texts[3]:  # Кнопка "Выход"
+        elif button_text == self.button_texts[3]:
             self.quit_game()
 
     def update_button_texts(self):

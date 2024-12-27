@@ -1,7 +1,7 @@
 import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_FONT
 from scripts.ui.dialog_box import DialogueBox
-from scripts.ui.menu import Menu  # Импортируем класс Menu из menu.py
+from scripts.ui.menu import Menu
 
 def start_game_in_cabin(screen):
     clock = pygame.time.Clock()
@@ -22,7 +22,7 @@ def start_game_in_cabin(screen):
     alpha_step = 255 / fade_ticks
 
     dialogue_box = DialogueBox(DEFAULT_FONT)
-    menu = Menu()  # Создаем экземпляр меню
+    menu = Menu()
 
     running = True
     while running:
@@ -30,15 +30,12 @@ def start_game_in_cabin(screen):
             if event.type == pygame.QUIT:
                 running = False
 
-            # Обрабатываем ввод для меню
             menu.handle_input(event)
 
-        # Если пользователь выбрал "Выход", завершаем игру
         if menu.exit_game:
             running = False
             continue
 
-        # Отрисовка локации (фон + диалоги)
         if alpha_surface.get_alpha() > 0:
             alpha_surface.set_alpha(alpha_surface.get_alpha() - alpha_step)
 
@@ -83,11 +80,11 @@ def start_game_in_cabin(screen):
                     screen.blit(text_surface, (box_x + 20, y_offset_text))
                     y_offset_text += dialogue_box.font.get_height()
 
-        # Если меню открыто, затемняем экран и отображаем меню
+
         if menu.show_pause_menu:
             fade_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
             fade_surface.fill((0, 0, 0))
-            fade_surface.set_alpha(30)  # Полупрозрачный черный слой
+            fade_surface.set_alpha(30)
             screen.blit(fade_surface, (0, 0))
             menu.display(screen)
 

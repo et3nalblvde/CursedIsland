@@ -4,20 +4,19 @@ from settings import SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_FONT, FONT_SIZE, IMAGE
 
 class Menu:
     def __init__(self):
-        # Загружаем все настройки игры
         self.language_settings = self.load_game_settings()
-        self.language = self.language_settings.get("language", "ru")  # Получаем язык из настроек
-        self.font = pygame.font.Font(DEFAULT_FONT, FONT_SIZE * 2)  # Устанавливаем шрифт
-        self.load_text()  # Загружаем локализованный текст
+        self.language = self.language_settings.get("language", "ru")
+        self.font = pygame.font.Font(DEFAULT_FONT, FONT_SIZE * 2)
+        self.load_text()
         self.selected_button = 0
         self.show_pause_menu = False
         self.exit_game = False
         self.alpha_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
-        self.alpha_surface.fill((0, 0, 0, 180))  # Затемняем экран для паузы
+        self.alpha_surface.fill((0, 0, 0, 180))
         self.button_background = pygame.image.load(IMAGES_DIR + "map.png").convert_alpha()
         self.button_background = pygame.transform.scale(self.button_background, (400, 80))
         self.cursor = pygame.image.load(IMAGES_DIR + "cursor.png").convert_alpha()
-        self.cursor = pygame.transform.scale(self.cursor, (14, 20))  # Размер курсора
+        self.cursor = pygame.transform.scale(self.cursor, (14, 20))
         self.cursor_width, self.cursor_height = self.cursor.get_size()
         self.ignore_next_click = False
         self.show_options_menu = False
@@ -29,7 +28,7 @@ class Menu:
         try:
             with open("config/game_settings.json", "r", encoding="utf-8") as file:
                 settings = json.load(file)
-                return settings  # Возвращаем все настройки, включая язык, сложность и т. д.
+                return settings
         except FileNotFoundError:
             return {"language": "ru", "volume": 1.0, "autosave": False, "difficulty": "Средне"}
         except json.JSONDecodeError:
@@ -64,7 +63,7 @@ class Menu:
                     if self.buttons[self.selected_button] == self.text_data["main_menu"]["continue"]:
                         self.show_pause_menu = False
                     elif self.buttons[self.selected_button] == self.text_data["main_menu"]["settings"]:
-                        self.show_options_menu = True  # Переход в меню настроек
+                        self.show_options_menu = True
                     elif self.buttons[self.selected_button] == self.text_data["main_menu"]["exit"]:
                         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
@@ -80,14 +79,13 @@ class Menu:
                         if button == self.text_data["main_menu"]["continue"]:
                             self.show_pause_menu = False
                         elif button == self.text_data["main_menu"]["settings"]:
-                            self.show_options_menu = True  # Переход в меню настроек
+                            self.show_options_menu = True
                         elif button == self.text_data["main_menu"]["exit"]:
                             pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def display(self, screen):
-        """Отображаем экран, включая меню паузы или основное меню."""
         if self.show_options_menu:
-            self.display_options_menu(screen)  # Вызов функции для отображения настроек
+            self.display_options_menu(screen)
         elif self.show_pause_menu:
             screen.blit(self.alpha_surface, (0, 0))
             y_offset = SCREEN_HEIGHT // 2 - (len(self.buttons) * self.button_background.get_height()) // 2 + self.y_offset
@@ -110,33 +108,32 @@ class Menu:
                 screen.blit(button_text, (text_x, text_y))
 
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            screen.blit(self.cursor, (mouse_x - self.cursor_width // 2, mouse_y - self.cursor_height // 2))  # Отображаем курсор
+            screen.blit(self.cursor, (mouse_x - self.cursor_width // 2, mouse_y - self.cursor_height // 2))
 
     def update(self, screen, event, clock):
-        """Обновляем меню на экране."""
+
         self.handle_input(event)
         self.display(screen)
         clock.tick(120)
 
     def display_options_menu(self, surface):
-        """Отображаем меню настроек."""
-        # Получаем данные из настроек игры
-        volume = self.language_settings.get("volume", 1.0)  # Громкость
-        autosave = self.language_settings.get("autosave", False)
-        difficulty = self.language_settings.get("difficulty", "Средне")  # Сложность
 
-        # Отображаем громкость (в процентах), автосохранение и сложность
+        volume = self.language_settings.get("volume", 1.0)
+        autosave = self.language_settings.get("autosave", False)
+        difficulty = self.language_settings.get("difficulty", "Средне")
+
+
         option_texts = [
-            f"Звук: {int(volume * 100)}%",  # Преобразуем громкость в проценты
+            f"Звук: {int(volume * 100)}%",
             f"{self.text_data.get('change_language', 'Смена языка')}: {self.language.upper()}",
             f"Автосохранение: {'Включено' if autosave else 'Выключено'}",
-            f"Сложность: {difficulty}"  # Здесь добавляется вывод сложности
+            f"Сложность: {difficulty}"
         ]
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         option_buttons = []
 
-        # Отображаем каждый элемент меню настроек
+
         for i, option_text in enumerate(option_texts):
             option_label = self.font.render(option_text, True, (0, 0, 255))
             text_width = option_label.get_width()
@@ -151,12 +148,12 @@ class Menu:
             button_bg = pygame.transform.scale(self.button_background, (bg_width, bg_height))
             surface.blit(button_bg, (option_bg_x, option_bg_y))
 
-            # Подсвечиваем текст при наведении мыши
+
             if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
-                option_label = self.font.render(option_text, True, (255, 255, 255))  # Меняем цвет на белый
+                option_label = self.font.render(option_text, True, (255, 255, 255))
             surface.blit(option_label, (option_bg_x + 10, option_bg_y + 10))
 
-        # Кнопка "Назад"
+
         back_label = self.font.render(self.text_data["back"], True, (0, 0, 255))
         back_text_width = back_label.get_width()
         back_text_height = back_label.get_height()
@@ -175,6 +172,6 @@ class Menu:
             back_label = self.font.render(self.text_data["back"], True, (255, 255, 255))
             surface.blit(back_label, (back_bg_x + 10, back_bg_y + 10))
 
-        # Отображаем курсор
+
         surface.blit(self.cursor, (mouse_x - self.cursor_width // 2, mouse_y - self.cursor_height // 2))
 
