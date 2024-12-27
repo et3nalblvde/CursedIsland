@@ -16,5 +16,17 @@
     "settings": "Настройки",
     "exit": "Выход",
     "continue": "Продолжить"
+  },
+  "settings_menu": {
+    "volume": "Звук: {volume}%",
+    "change_language": "Смена языка",
+    "autosave": "Автосохранение: {status}",
+    "difficulty": "Сложность: {difficulty}",
+    "back": "Назад"
+  },
+  "pause_menu": {
+    "continue": "Продолжить",
+    "settings": "Настройки",
+    "exit": "Выход"
   }
 }

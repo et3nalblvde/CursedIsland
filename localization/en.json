@@ -16,5 +16,17 @@
     "settings": "Settings",
     "exit": "Exit",
     "continue": "Continue"
+  },
+  "settings_menu": {
+    "volume": "Volume: {volume}%",
+    "change_language": "Change Language",
+    "autosave": "Autosave: {status}",
+    "difficulty": "Difficulty: {difficulty}",
+    "back": "Back"
+  },
+  "pause_menu": {
+    "continue": "Continue",
+    "settings": "Settings",
+    "exit": "Exit"
   }
 }

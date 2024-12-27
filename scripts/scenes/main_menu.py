@@ -24,6 +24,8 @@ class MainMenu:
  # Экран, передаваемый в конструктор
         self.x_offset = 0  # Переменная для смещения по оси X
         self.y_offset = -110
+        self.x_show=0
+        self.y_show=-360
         self.background = pygame.image.load("assets/images/map.png")
         self.background = pygame.transform.scale(self.background, (self.button_width + 30, self.button_height + 10))
         self.frames = self.load_gif("assets/videos/sea.gif")
@@ -115,72 +117,7 @@ class MainMenu:
             return
 
         if self.show_options_menu:
-            option_texts = [
-                f"Звук: {int(self.settings.volume * 100)}%",
-                f"Смена языка: {self.settings.language}",
-                f"Автосохранение: {'Включено' if self.settings.autosave else 'Выключено'}",
-                f"Сложность: {self.settings.difficulty}"
-            ]
-
-            option_buttons = []
-            for i, option_text in enumerate(option_texts):
-                option_label = self.font.render(option_text, True, (0, 0, 255))
-
-                text_width = option_label.get_width()
-                text_height = option_label.get_height()
-
-                bg_width = text_width + 40
-                bg_height = text_height + 20
-
-                # Управляем позициями кнопок в меню настроек с учетом смещения
-                option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2 + self.x_offset  # Центр по оси X с учетом смещения
-                option_bg_y = SCREEN_HEIGHT // 3 + i * (
-                            bg_height + 30) + 400 + self.y_offset  # Позиция по оси Y с учетом смещения
-
-                option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height, i))
-
-                # Отображение прямоугольника для отладки
-                pygame.draw.rect(self.screen, (255, 0, 0), (option_bg_x, option_bg_y, bg_width, bg_height),
-                                 2)  # Красный контур
-
-                # Проверка клика на кнопку настроек
-                if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
-                    if pygame.mouse.get_pressed()[0]:
-                        if current_time - self.last_click_time > self.click_delay:
-                            if i == 0:
-                                self.settings.change_volume(0.1)
-                            elif i == 1:
-                                new_language = 'en' if self.settings.language == 'ru' else 'ru'
-                                self.settings.change_language(new_language)
-                            elif i == 2:
-                                self.settings.toggle_autosave()
-                            elif i == 3:
-                                self.settings.change_difficulty()
-                            self.last_click_time = current_time  # Обновляем время последнего клика
-
-            # Кнопка "Назад" в меню настроек
-            back_label = self.font.render('Назад', True, (0, 0, 255))
-            back_text_width = back_label.get_width()
-            back_text_height = back_label.get_height()
-
-            back_bg_width = back_text_width + 45
-            back_bg_height = back_text_height + 20
-
-            # Управление позицией кнопки "Назад" с учетом смещения
-            back_bg_x = SCREEN_WIDTH // 2 - back_bg_width // 2 + self.x_offset  # Центр по оси X с учетом смещения
-            back_bg_y = SCREEN_HEIGHT - back_bg_height - 360 + self.y_offset  # Позиция по оси Y с учетом смещения
-
-            # Отображение прямоугольника для отладки
-            pygame.draw.rect(self.screen, (255, 0, 0), (back_bg_x, back_bg_y, back_bg_width, back_bg_height),
-                             2)  # Красный контур
-
-            # Проверка клика на кнопку "Назад"
-            if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
-                if pygame.mouse.get_pressed()[0]:
-                    if current_time - self.last_click_time > self.click_delay:
-                        self.show_options_menu = False
-                        self.last_click_time = current_time  # Обновляем время последнего клика
-                    return
+            return
 
         else:
             button_coords = []
@@ -217,6 +154,83 @@ class MainMenu:
 
                         self.execute_action(button_text)
                         return
+
+    def handle_options_menu_click(self, mouse_x, mouse_y):
+        current_time = pygame.time.get_ticks()
+
+        if current_time - self.last_click_time < 200:  # Чтобы избежать двойных кликов
+            return
+
+        # Кнопки настроек
+        option_texts = [
+            f"Звук: {int(self.settings.volume * 100)}%",
+            f"Смена языка: {self.settings.language}",
+            f"Автосохранение: {'Включено' if self.settings.autosave else 'Выключено'}",
+            f"Сложность: {self.settings.difficulty}"
+        ]
+
+        option_buttons = []  # Список для кнопок настроек
+
+        # Управление кнопками настроек с локальными переменными для координат
+        for i, option_text in enumerate(option_texts):
+            option_label = self.font.render(option_text, True, (0, 0, 255))
+
+            text_width = option_label.get_width()
+            text_height = option_label.get_height()
+
+            # Локальные переменные для размеров кнопок и их позиции
+            bg_width = text_width + 40
+            bg_height = text_height + 20
+
+            # Использование переменных x_show и y_show для управления позициями кнопок
+            option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2 + self.x_show  # Центр по оси X с учетом смещения
+            option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 400 + self.y_show  # Позиция по оси Y
+
+            # Добавляем кнопку в список
+            option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height, i))
+
+            # Отображение прямоугольника для отладки
+            pygame.draw.rect(self.screen, (255, 0, 0), (option_bg_x, option_bg_y, bg_width, bg_height),
+                             2)  # Красный контур
+
+            # Проверка клика на кнопку
+            if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
+                if pygame.mouse.get_pressed()[0]:
+                    if current_time - self.last_click_time > self.click_delay:
+                        if i == 0:
+                            self.settings.change_volume(0.1)
+                        elif i == 1:
+                            new_language = 'en' if self.settings.language == 'ru' else 'ru'
+                            self.settings.change_language(new_language)
+                        elif i == 2:
+                            self.settings.toggle_autosave()
+                        elif i == 3:
+                            self.settings.change_difficulty()
+                        self.last_click_time = current_time  # Обновляем время последнего клика
+
+        # Кнопка "Назад"
+        back_label = self.font.render('Назад', True, (0, 0, 255))
+        back_text_width = back_label.get_width()
+        back_text_height = back_label.get_height()
+
+        back_bg_width = back_text_width + 45
+        back_bg_height = back_text_height + 20
+
+        # Локальные переменные для кнопки "Назад"
+        back_bg_x = SCREEN_WIDTH // 2 - back_bg_width // 2 + self.x_show  # Центр по оси X с учетом смещения
+        back_bg_y = SCREEN_HEIGHT - back_bg_height  + self.y_show  # Позиция по оси Y с учетом смещения
+
+        # Отображение прямоугольника для отладки
+        pygame.draw.rect(self.screen, (255, 0, 0), (back_bg_x, back_bg_y, back_bg_width, back_bg_height),
+                         2)  # Красный контур
+
+        # Проверка клика на кнопку "Назад"
+        if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
+            if pygame.mouse.get_pressed()[0]:
+                if current_time - self.last_click_time > self.click_delay:
+                    self.show_options_menu = False
+                    self.last_click_time = current_time  # Обновляем время последнего клика
+
     def display(self, surface):
         surface.fill((0, 0, 0))
         current_frame_resized = pygame.transform.scale(self.frames[self.current_frame], (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -249,10 +263,11 @@ class MainMenu:
 
                 if self.show_options_menu:
                     self.display_options_menu(surface)
+                    mouse_x, mouse_y = pygame.mouse.get_pos()  # Получаем координаты мыши
+                    self.handle_options_menu_click(mouse_x, mouse_y)  # Обрабатываем клики в меню настроек
                 else:
                     surface.blit(self.font.render(self.title_text, True, WHITE),
                                  (SCREEN_WIDTH // 2 - self.font.size(self.title_text)[0] // 2, SCREEN_HEIGHT // 3))
-
 
                     y_offset = 70
 
@@ -309,7 +324,6 @@ class MainMenu:
         self.clock.tick(120)
 
         self.handle_mouse_click(mouse_x, mouse_y)
-
 
     def execute_action(self, button_text=None):
         if button_text is None:
