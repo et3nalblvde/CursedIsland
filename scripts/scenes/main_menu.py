@@ -42,9 +42,13 @@ class MainMenu:
 
         self.clock = pygame.time.Clock()
 
+        pygame.mixer.init()
+        self.menu_music_path = "audio/music/menu_theme.mp3"
+        self.music_playing = False
+        self.music_delay = 100
         self.show_main_menu = False
         self.show_options_menu = False
-
+        self.music_start_time = None
         self.selected_button = 0
 
         self.last_text_update = pygame.time.get_ticks()
@@ -70,6 +74,22 @@ class MainMenu:
             frame_image = pygame.image.fromstring(gif.convert('RGB').tobytes(), gif.size, 'RGB')
             frames.append(frame_image)
         return frames
+
+    def play_menu_music(self):
+        current_time = pygame.time.get_ticks()
+        if self.music_start_time is None:
+            self.music_start_time = current_time
+
+        if current_time - self.music_start_time >= self.music_delay:
+            if not self.music_playing:
+                pygame.mixer.music.load(self.menu_music_path)
+                pygame.mixer.music.play(-1)
+                self.music_playing = True
+
+    def stop_menu_music(self):
+        if self.music_playing:
+            pygame.mixer.music.stop()
+            self.music_playing = False
 
     def update_button_texts(self):
         self.button_texts = [
@@ -161,18 +181,16 @@ class MainMenu:
                     if current_time - self.last_click_time > self.click_delay:
                         self.last_click_time = current_time
                         if button_text == 'Продолжить':
-                            print("Продолжаем игру...")
+                            pass
                         elif button_text == 'Начать игру':
                             self.start_game()
                         elif button_text == 'Выход':
-                            print("Выход из игры...")
                             self.quit_game()
                         self.execute_action(button_text)
                         return
 
     def display(self, surface):
         surface.fill((0, 0, 0))
-
         current_frame_resized = pygame.transform.scale(self.frames[self.current_frame], (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(current_frame_resized, (0, 0))
 
@@ -182,7 +200,8 @@ class MainMenu:
             self.alpha = 255 - (fade_elapsed / self.fade_duration) * 255
         else:
             self.alpha = 0
-
+        if not self.music_playing and not self.game_started:
+            self.play_menu_music()
         fade_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         fade_surface.fill((0, 0, 0))
         fade_surface.set_alpha(self.alpha)
@@ -206,7 +225,8 @@ class MainMenu:
                     surface.blit(self.font.render(self.title_text, True, WHITE),
                                  (SCREEN_WIDTH // 2 - self.font.size(self.title_text)[0] // 2, SCREEN_HEIGHT // 3))
 
-                    y_offset = 50
+
+                    y_offset = 70
 
                     for i, button in enumerate(self.buttons):
                         surface.blit(self.background, (SCREEN_WIDTH // 2 - self.background.get_width() // 2,
@@ -240,7 +260,6 @@ class MainMenu:
                 if not self.game_started:
                     if event.key == pygame.K_RETURN:
                         self.game_started = True
-                        print("Игра начинается...")
                         self.show_main_menu = True
                     return
 
@@ -263,18 +282,16 @@ class MainMenu:
 
         self.handle_mouse_click(mouse_x, mouse_y)
 
+
     def execute_action(self, button_text=None):
         if button_text is None:
             button_text = self.button_texts[self.selected_button]
 
         if button_text == self.button_texts[0]:
-            print("Начинаем игру...")
             self.start_game()
         elif button_text == self.button_texts[1]:
-            print("Открываются настройки...")
             self.show_options_menu = True
         elif button_text == self.button_texts[2]:
-            print("Выход из игры...")
             self.quit_game()
 
     def update_button_texts(self):
@@ -287,11 +304,11 @@ class MainMenu:
         self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
 
     def quit_game(self):
-        print("Закрытие игры...")
         pygame.quit()
         quit()
 
     def start_game(self):
+        self.stop_menu_music()
         start_game_in_cabin(DISPLAYSURF)
 
     def display_options_menu(self, surface):
@@ -343,7 +360,6 @@ class MainMenu:
 
     def set_language(self, language):
         self.settings.language = language
-        print(f"Язык изменен на: {language}")
 
     def update_title_text(self):
         self.title_text = self.settings.get_text('title')

@@ -11,8 +11,9 @@ class DialogueBox:
 
         self.dialogues = self.load_dialogues()
 
-        self.current_dialogue = 0
-        self.text_speed = 3
+        self.current_dialogue = -1
+        self.text_speed = 2
+
         self.text_progress = 0
         self.dialogue_text = ""
         self.is_typing = False

@@ -16,7 +16,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
-
+MENU_MUSIC_PATH = "audio/music/menu_theme.mp3"
 ASSETS_DIR = "assets/"
 IMAGES_DIR = ASSETS_DIR + "images/"
 AUDIO_DIR = ASSETS_DIR + "audio/"
