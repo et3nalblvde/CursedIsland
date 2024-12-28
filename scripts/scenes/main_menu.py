@@ -18,7 +18,8 @@ class MainMenu:
         self.language = 'ru'
         self.button_texts = ['Продолжить', 'Начать игру', 'Настройки', 'Выход']
         self.buttons = [self.font.render(text, True, (0, 0, 255)) for text in self.button_texts]
-
+        self.is_game_running = False
+        self.is_continue_pressed = False
         self.button_width = max(button.get_width() for button in self.buttons)
         self.button_height = self.buttons[0].get_height()
 
@@ -107,48 +108,56 @@ class MainMenu:
     def handle_mouse_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
 
-        if current_time - self.last_click_time < 500:
+
+        if self.is_game_running:
             return
 
-        if not self.game_started:
+
+        if current_time - self.last_click_time < self.click_delay:
             return
 
-        if current_time - self.last_click_time < 200:
-            return
 
         if self.show_options_menu:
             return
 
-        else:
-            button_coords = []
-            button_y_offset = 40
 
-            for i, button_text in enumerate(self.button_texts):
-                button_rect = pygame.Rect(
-                    SCREEN_WIDTH // 2 - self.background.get_width() // 2 + self.x_offset,
-                    SCREEN_HEIGHT // 2 + i * (self.button_height + 20) + button_y_offset + self.y_offset,
-                    self.background.get_width(),
-                    self.background.get_height()
-                )
+        if self.is_continue_pressed:
+            return
 
-                button_coords.append((button_rect, button_text))
+        button_coords = []
+        button_y_offset = 40
 
-                pygame.draw.rect(self.screen, (255, 0, 0), button_rect, 2)
+        for i, button_text in enumerate(self.button_texts):
+            button_rect = pygame.Rect(
+                SCREEN_WIDTH // 2 - self.background.get_width() // 2 + self.x_offset,
+                SCREEN_HEIGHT // 2 + i * (self.button_height + 20) + button_y_offset + self.y_offset,
+                self.background.get_width(),
+                self.background.get_height()
+            )
 
-            for button_rect, button_text in button_coords:
-                if button_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
-                    if current_time - self.last_click_time > self.click_delay:
-                        self.last_click_time = current_time
+            button_coords.append((button_rect, button_text))
 
-                        if button_text == 'Продолжить':
-                            pass
-                        elif button_text == 'Начать игру':
-                            self.start_game()
-                        elif button_text == 'Выход':
-                            self.quit_game()
+            pygame.draw.rect(self.screen, (255, 0, 0), button_rect, 2)
 
-                        self.execute_action(button_text)
-                        return
+        for button_rect, button_text in button_coords:
+            if button_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
+
+                self.last_click_time = current_time
+
+                if button_text == 'Продолжить':
+                    self.is_continue_pressed = True
+                    return
+
+                elif button_text == 'Начать игру':
+                    self.is_game_running = True
+                    self.start_game()
+                    return
+
+                elif button_text == 'Выход':
+                    self.quit_game()
+                    return
+
+                self.execute_action(button_text)
 
     def handle_options_menu_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()

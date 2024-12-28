@@ -2,6 +2,7 @@ import pygame
 import json
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_FONT, FONT_SIZE, IMAGES_DIR
 
+
 class Menu:
     def __init__(self):
         self.language_settings = self.load_game_settings()
@@ -15,16 +16,17 @@ class Menu:
         self.alpha_surface.fill((0, 0, 0, 180))
         self.button_background = pygame.image.load(IMAGES_DIR + "map.png").convert_alpha()
         self.button_background = pygame.transform.scale(self.button_background, (400, 80))
-        self.cursor = pygame.image.load(IMAGES_DIR + "cursor.png").convert_alpha()
-        self.cursor = pygame.transform.scale(self.cursor, (14, 20))
-        self.cursor_width, self.cursor_height = self.cursor.get_size()
+
+
+        pygame.mouse.set_visible(False)
+
         self.ignore_next_click = False
         self.show_options_menu = False
         self.x_offset = 0
         self.y_offset = 0
 
     def load_game_settings(self):
-        """Загружаем настройки игры, включая язык и другие параметры."""
+
         try:
             with open("config/game_settings.json", "r", encoding="utf-8") as file:
                 settings = json.load(file)
@@ -35,7 +37,7 @@ class Menu:
             return {"language": "ru", "volume": 1.0, "autosave": False, "difficulty": "Средне"}
 
     def load_text(self):
-        """Загружаем локализованные строки из JSON-файла."""
+
         try:
             with open(f"localization/{self.language}.json", "r", encoding="utf-8") as file:
                 self.text_data = json.load(file)
@@ -50,7 +52,10 @@ class Menu:
             self.buttons = ["Continue", "Settings", "Exit"]
 
     def handle_input(self, event):
-        """Обрабатываем ввод с клавиатуры и мыши."""
+
+        if self.ignore_next_click:
+            return
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.show_pause_menu = not self.show_pause_menu
@@ -64,6 +69,7 @@ class Menu:
                         self.show_pause_menu = False
                     elif self.buttons[self.selected_button] == self.text_data["main_menu"]["settings"]:
                         self.show_options_menu = True
+                        self.ignore_next_click = True
                     elif self.buttons[self.selected_button] == self.text_data["main_menu"]["exit"]:
                         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
@@ -72,14 +78,16 @@ class Menu:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
                 for i, button in enumerate(self.buttons):
                     button_x = SCREEN_WIDTH // 2 - self.button_background.get_width() // 2 + self.x_offset
-                    button_y = SCREEN_HEIGHT // 2 - (len(self.buttons) * self.button_background.get_height()) // 2 + i * (
-                                self.button_background.get_height() + 50) + self.y_offset
+                    button_y = SCREEN_HEIGHT // 2 - (
+                                len(self.buttons) * self.button_background.get_height()) // 2 + i * (
+                                       self.button_background.get_height() + 50) + self.y_offset
                     if (button_x <= mouse_x <= button_x + self.button_background.get_width() and
                             button_y <= mouse_y <= button_y + self.button_background.get_height()):
                         if button == self.text_data["main_menu"]["continue"]:
                             self.show_pause_menu = False
                         elif button == self.text_data["main_menu"]["settings"]:
                             self.show_options_menu = True
+                            self.ignore_next_click = True
                         elif button == self.text_data["main_menu"]["exit"]:
                             pygame.event.post(pygame.event.Event(pygame.QUIT))
 
@@ -88,7 +96,8 @@ class Menu:
             self.display_options_menu(screen)
         elif self.show_pause_menu:
             screen.blit(self.alpha_surface, (0, 0))
-            y_offset = SCREEN_HEIGHT // 2 - (len(self.buttons) * self.button_background.get_height()) // 2 + self.y_offset
+            y_offset = SCREEN_HEIGHT // 2 - (
+                        len(self.buttons) * self.button_background.get_height()) // 2 + self.y_offset
             for i, button in enumerate(self.buttons):
                 button_x = SCREEN_WIDTH // 2 - self.button_background.get_width() // 2 + self.x_offset
                 button_y = y_offset + i * (self.button_background.get_height() + 30)
@@ -107,11 +116,10 @@ class Menu:
                 text_y = button_y + (self.button_background.get_height() - button_text.get_height()) // 2
                 screen.blit(button_text, (text_x, text_y))
 
-            mouse_x, mouse_y = pygame.mouse.get_pos()
-            screen.blit(self.cursor, (mouse_x - self.cursor_width // 2, mouse_y - self.cursor_height // 2))
+
+                pygame.draw.rect(screen, (255, 0, 0), (button_x, button_y, self.button_background.get_width(), self.button_background.get_height()), 3)
 
     def update(self, screen, event, clock):
-
         self.handle_input(event)
         self.display(screen)
         clock.tick(120)
@@ -122,7 +130,6 @@ class Menu:
         autosave = self.language_settings.get("autosave", False)
         difficulty = self.language_settings.get("difficulty", "Средне")
 
-
         option_texts = [
             f"Звук: {int(volume * 100)}%",
             f"{self.text_data.get('change_language', 'Смена языка')}: {self.language.upper()}",
@@ -132,7 +139,6 @@ class Menu:
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         option_buttons = []
-
 
         for i, option_text in enumerate(option_texts):
             option_label = self.font.render(option_text, True, (0, 0, 255))
@@ -148,11 +154,12 @@ class Menu:
             button_bg = pygame.transform.scale(self.button_background, (bg_width, bg_height))
             surface.blit(button_bg, (option_bg_x, option_bg_y))
 
-
             if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
                 option_label = self.font.render(option_text, True, (255, 255, 255))
             surface.blit(option_label, (option_bg_x + 10, option_bg_y + 10))
 
+
+            pygame.draw.rect(surface, (255, 0, 0), (option_bg_x, option_bg_y, bg_width, bg_height), 3)
 
         back_label = self.font.render(self.text_data["back"], True, (0, 0, 255))
         back_text_width = back_label.get_width()
@@ -168,10 +175,5 @@ class Menu:
 
         surface.blit(back_label, (back_bg_x + 10, back_bg_y + 10))
 
-        if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
-            back_label = self.font.render(self.text_data["back"], True, (255, 255, 255))
-            surface.blit(back_label, (back_bg_x + 10, back_bg_y + 10))
 
-
-        surface.blit(self.cursor, (mouse_x - self.cursor_width // 2, mouse_y - self.cursor_height // 2))
-
+        pygame.draw.rect(surface, (255, 0, 0), (back_bg_x, back_bg_y, back_bg_width, back_bg_height), 3)

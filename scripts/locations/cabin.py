@@ -5,7 +5,7 @@ from scripts.ui.menu import Menu
 
 def start_game_in_cabin(screen):
     clock = pygame.time.Clock()
-    background = pygame.image.load('assets/locations/ship_room.png')
+    background = pygame.image.load('assets/locations/ship_room.png').convert()
 
     bg_width, bg_height = background.get_size()
     new_width = int(bg_width * 1.7)
@@ -23,6 +23,14 @@ def start_game_in_cabin(screen):
 
     dialogue_box = DialogueBox(DEFAULT_FONT)
     menu = Menu()
+
+
+    cursor_image = pygame.image.load('assets/images/cursor.png').convert_alpha()
+    cursor_image = pygame.transform.scale(cursor_image, (14, 20))
+    cursor_rect = cursor_image.get_rect()
+
+
+    pygame.mouse.set_visible(False)
 
     running = True
     while running:
@@ -88,6 +96,12 @@ def start_game_in_cabin(screen):
             screen.blit(fade_surface, (0, 0))
             menu.display(screen)
 
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        cursor_rect.topleft = (mouse_x, mouse_y)
+
+
+        screen.blit(cursor_image, cursor_rect)
+
         pygame.display.flip()
         clock.tick(60)
-
