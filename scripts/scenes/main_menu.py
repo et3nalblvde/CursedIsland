@@ -7,7 +7,6 @@ import os
 from scripts.locations.cabin import start_game_in_cabin
 from settings import DISPLAYSURF
 
-
 class MainMenu:
     def __init__(self):
         self.settings = Settings(self)
@@ -65,6 +64,8 @@ class MainMenu:
 
         self.settings = Settings(self)
         self.update_button_texts()
+        self.volume_up_button = self.font.render('+', True, (0, 0, 255))
+        self.volume_down_button = self.font.render('-', True, (0, 0, 255))
 
     def load_gif(self, gif_path):
         gif = Image.open(gif_path)
@@ -225,7 +226,6 @@ class MainMenu:
                     surface.blit(self.font.render(self.title_text, True, WHITE),
                                  (SCREEN_WIDTH // 2 - self.font.size(self.title_text)[0] // 2, SCREEN_HEIGHT // 3))
 
-
                     y_offset = 70
 
                     for i, button in enumerate(self.buttons):
@@ -282,7 +282,6 @@ class MainMenu:
 
         self.handle_mouse_click(mouse_x, mouse_y)
 
-
     def execute_action(self, button_text=None):
         if button_text is None:
             button_text = self.button_texts[self.selected_button]
@@ -310,6 +309,7 @@ class MainMenu:
     def start_game(self):
         self.stop_menu_music()
         start_game_in_cabin(DISPLAYSURF)
+        self.play_menu_music()  # Воспроизведение музыки после возвращения в главное меню
 
     def display_options_menu(self, surface):
         option_texts = [
@@ -340,6 +340,24 @@ class MainMenu:
                 option_label = self.font.render(option_text, True, (255, 255, 255))
             surface.blit(option_label, (option_bg_x + 10, option_bg_y + 10))
 
+            # Добавление кнопок для изменения громкости
+            if i == 0:
+                volume_up_x = option_bg_x + bg_width + 10
+                volume_down_x = option_bg_x - 60
+                volume_y = option_bg_y + (bg_height - self.volume_up_button.get_height()) // 2
+                surface.blit(self.volume_up_button, (volume_up_x, volume_y))
+                surface.blit(self.volume_down_button, (volume_down_x, volume_y))
+
+                if volume_up_x < mouse_x < volume_up_x + self.volume_up_button.get_width() and volume_y < mouse_y < volume_y + self.volume_up_button.get_height():
+                    self.volume_up_button = self.font.render('+', True, (255, 255, 255))
+                else:
+                    self.volume_up_button = self.font.render('+', True, (0, 0, 255))
+
+                if volume_down_x < mouse_x < volume_down_x + self.volume_down_button.get_width() and volume_y < mouse_y < volume_y + self.volume_down_button.get_height():
+                    self.volume_down_button = self.font.render('-', True, (255, 255, 255))
+                else:
+                    self.volume_down_button = self.font.render('-', True, (0, 0, 255))
+
         back_label = self.font.render(self.settings.get_text('back'), True, (0, 0, 255))
         back_text_width = back_label.get_width()
         back_text_height = back_label.get_height()
@@ -358,12 +376,118 @@ class MainMenu:
             back_label = self.font.render(self.settings.get_text('back'), True, (255, 255, 255))
             surface.blit(back_label, (back_bg_x + 10, back_bg_y + 10))
 
+    def handle_mouse_click(self, mouse_x, mouse_y):
+        current_time = pygame.time.get_ticks()
+
+        if not self.game_started:
+            return
+
+        if current_time - self.last_click_time < 200:
+            return
+
+        if self.show_options_menu:
+            option_texts = [
+                f"Звук: {int(self.settings.volume * 100)}%",
+                f"Смена языка: {self.settings.language}",
+                f"Автосохранение: {'Включено' if self.settings.autosave else 'Выключено'}",
+                f"Сложность: {self.settings.difficulty}"
+            ]
+
+            option_buttons = []
+            for i, option_text in enumerate(option_texts):
+                option_label = self.font.render(option_text, True, (0, 0, 255))
+
+                text_width = option_label.get_width()
+                text_height = option_label.get_height()
+
+                bg_width = text_width + 40
+                bg_height = text_height + 20
+
+                option_bg_x = SCREEN_WIDTH // 2 - bg_width // 2
+                option_bg_y = SCREEN_HEIGHT // 3 + i * (bg_height + 30) + 30
+
+                option_buttons.append((option_bg_x, option_bg_y, bg_width, bg_height, i))
+
+                if option_bg_x < mouse_x < option_bg_x + bg_width and option_bg_y < mouse_y < option_bg_y + bg_height:
+                    if pygame.mouse.get_pressed()[0]:
+                        if current_time - self.last_click_time > self.click_delay:
+                            if i == 0:
+                                self.settings.change_volume(0.1)
+                            elif i == 1:
+                                new_language = 'en' if self.settings.language == 'ru' else 'ru'
+                                self.settings.change_language(new_language)
+                            elif i == 2:
+                                self.settings.toggle_autosave()
+                            elif i == 3:
+                                self.settings.change_difficulty()
+                            self.last_click_time = current_time
+
+                # Обработка кликов по кнопкам изменения громкости
+                if i == 0:
+                    volume_up_x = option_bg_x + bg_width + 10
+                    volume_down_x = option_bg_x - 60
+                    volume_y = option_bg_y + (bg_height - self.volume_up_button.get_height()) // 2
+
+                    if volume_up_x < mouse_x < volume_up_x + self.volume_up_button.get_width() and volume_y < mouse_y < volume_y + self.volume_up_button.get_height():
+                        if pygame.mouse.get_pressed()[0]:
+                            if current_time - self.last_click_time > self.click_delay:
+                                self.settings.change_volume(0.1)
+                                self.last_click_time = current_time
+
+                    if volume_down_x < mouse_x < volume_down_x + self.volume_down_button.get_width() and volume_y < mouse_y < volume_y + self.volume_down_button.get_height():
+                        if pygame.mouse.get_pressed()[0]:
+                            if current_time - self.last_click_time > self.click_delay:
+                                self.settings.change_volume(-0.1)
+                                self.last_click_time = current_time
+
+            back_label = self.font.render('Назад', True, (0, 0, 255))
+            back_text_width = back_label.get_width()
+            back_text_height = back_label.get_height()
+
+            back_bg_width = back_text_width + 45
+            back_bg_height = back_text_height + 20
+            back_bg_x = SCREEN_WIDTH // 2 - back_bg_width // 2
+            back_bg_y = SCREEN_HEIGHT - back_bg_height - 360
+
+            if back_bg_x < mouse_x < back_bg_x + back_bg_width and back_bg_y < mouse_y < back_bg_y + back_bg_height:
+                if pygame.mouse.get_pressed()[0]:
+                    if current_time - self.last_click_time > self.click_delay:
+                        self.show_options_menu = False
+                        self.last_click_time = current_time
+
+                    return
+
+        else:
+            button_coords = []
+            button_y_offset = 40
+            for i, button_text in enumerate(self.button_texts):
+                button_rect = pygame.Rect(
+                    SCREEN_WIDTH // 2 - self.background.get_width() // 2,
+                    SCREEN_HEIGHT // 2 + i * (self.button_height + 20) + button_y_offset,
+                    self.background.get_width(),
+                    self.background.get_height()
+                )
+
+                button_coords.append((button_rect, button_text))
+
+            for button_rect, button_text in button_coords:
+                if button_rect.collidepoint(mouse_x, mouse_y) and pygame.mouse.get_pressed()[0]:
+                    if current_time - self.last_click_time > self.click_delay:
+                        self.last_click_time = current_time
+                        if button_text == 'Продолжить':
+                            pass
+                        elif button_text == 'Начать игру':
+                            self.start_game()
+                        elif button_text == 'Выход':
+                            self.quit_game()
+                        self.execute_action(button_text)
+                        return
+
     def set_language(self, language):
         self.settings.language = language
 
     def update_title_text(self):
         self.title_text = self.settings.get_text('title')
-
 
 class Settings:
     def __init__(self, main_menu_instance):

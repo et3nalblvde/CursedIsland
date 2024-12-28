@@ -1,11 +1,10 @@
 import pygame
 import json
 
-
 class DialogueBox:
     def __init__(self, font, display_dialogues=True):
         self.font = pygame.font.Font(font, 48)
-        self.display_dialogues =display_dialogues
+        self.display_dialogues = display_dialogues
 
         self.language = self.load_language_setting()
 
@@ -51,3 +50,15 @@ class DialogueBox:
                 self.dialogue_text = f"{self.dialogues[self.current_dialogue]['character']}: "
                 self.dialogue_text += ""
                 self.current_dialogue += 1
+
+    def skip_dialogue(self):
+        if self.current_dialogue < len(self.dialogues) - 1:
+            self.current_dialogue += 1
+            self.text_progress = 0
+            self.dialogue_text = f"{self.dialogues[self.current_dialogue]['character']}: "
+            self.dialogue_text += ""
+            self.is_typing = True
+        else:
+            self.current_dialogue = len(self.dialogues)
+            self.dialogue_text = ""
+            self.is_typing = False

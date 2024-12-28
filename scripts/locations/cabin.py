@@ -2,7 +2,6 @@ import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_FONT
 from scripts.ui.dialog_box import DialogueBox
 
-
 def start_game_in_cabin(screen):
     clock = pygame.time.Clock()
 
@@ -28,10 +27,43 @@ def start_game_in_cabin(screen):
     dialogue_box = DialogueBox(DEFAULT_FONT)
 
     running = True
+    dialogue_finished = False
+    character = None
+    paused = False  # Переменная для отслеживания состояния паузы
+
+    # Создаем шрифт для надписи "Пауза"
+    pause_font = pygame.font.Font(DEFAULT_FONT, 74)
+    pause_text = pause_font.render("Пауза", True, (255, 255, 255))
+    pause_text_rect = pause_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+
+    # Создаем шрифт для текста на кнопке
+    button_font = pygame.font.Font(DEFAULT_FONT, 36)
+    button_text = button_font.render("Вернуться в главное меню", True, (255, 255, 255))
+    button_rect = button_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100))
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    dialogue_box.skip_dialogue()
+                elif event.key == pygame.K_ESCAPE:  # Обработка нажатия на Esc
+                    paused = not paused  # Переключение состояния паузы
+                elif event.key == pygame.K_RETURN and paused:  # Обработка нажатия на Enter во время паузы
+                    return  # Возврат в главное меню
+
+        if paused:
+            screen.fill((0, 0, 0))
+            screen.blit(pause_text, pause_text_rect)  # Отображение надписи "Пауза"
+
+            # Рисуем кнопку
+            pygame.draw.rect(screen, (139, 69, 19), button_rect.inflate(20, 10))
+            screen.blit(button_text, button_rect)
+
+            pygame.display.flip()
+            clock.tick(60)
+            continue  # Если игра на паузе, пропускаем обновление и рендеринг
 
         if alpha_surface.get_alpha() > 0:
             alpha_surface.set_alpha(alpha_surface.get_alpha() - alpha_step)
@@ -40,7 +72,7 @@ def start_game_in_cabin(screen):
         screen.blit(background, (x_offset, y_offset))
         screen.blit(alpha_surface, (0, 0))
 
-        if dialogue_box.current_dialogue <= 6:
+        if dialogue_box.current_dialogue < len(dialogue_box.dialogues):
             box_width = screen.get_width() - 40
             box_height = 200
             box_x = 20
@@ -76,7 +108,8 @@ def start_game_in_cabin(screen):
                 screen.blit(text_surface, (box_x + 20, y_offset_text))
                 y_offset_text += dialogue_box.font.get_height()
         else:
-            pass
+            if not dialogue_finished:
+                dialogue_finished = True
 
         pygame.display.flip()
         clock.tick(60)
