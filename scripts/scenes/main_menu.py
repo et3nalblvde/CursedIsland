@@ -87,6 +87,7 @@ class MainMenu:
         if current_time - self.music_start_time >= self.music_delay:
             if not self.music_playing:
                 pygame.mixer.music.load(self.menu_music_path)
+                pygame.mixer.music.set_volume(self.settings.volume)  # Устанавливаем громкость в зависимости от настроек
                 pygame.mixer.music.play(-1)
                 self.music_playing = True
 
@@ -414,12 +415,12 @@ class MainMenu:
 
         volume_up_label = self.font.render("+", True, (0, 0, 255))
         volume_down_label = self.font.render("-", True, (0, 0, 255))
-        volume_button_width = volume_up_label.get_width() + 20
-        volume_button_height = volume_up_label.get_height() + 20
+        volume_button_width = volume_up_label.get_width() + 30
+        volume_button_height = volume_up_label.get_height() + 30
 
-        volume_down_x = SCREEN_WIDTH // 2 - 150 - volume_button_width
+        volume_down_x = SCREEN_WIDTH // 2 - 160 - volume_button_width
         volume_down_y = SCREEN_HEIGHT // 3 + 30
-        volume_up_x = SCREEN_WIDTH // 2 + 150
+        volume_up_x = SCREEN_WIDTH // 2 + 180
         volume_up_y = SCREEN_HEIGHT // 3 + 30
 
         volume_down_bg = pygame.transform.scale(self.background, (volume_button_width, volume_button_height))

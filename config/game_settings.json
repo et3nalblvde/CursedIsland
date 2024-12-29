@@ -1,7 +1,7 @@
 {
-    "volume": 0.20000000000000004,
-    "autosave": false,
-    "difficulty": "Легко",
-    "language": "en",
+    "volume": 0.10000000000000014,
+    "autosave": true,
+    "difficulty": "Средне",
+    "language": "ru",
     "fullscreen": false
 }
