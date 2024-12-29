@@ -107,6 +107,10 @@ class MainMenu:
     def handle_mouse_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
 
+
+        if not self.show_main_menu or self.is_game_running:
+            return
+
         if self.is_game_running:
             return
 

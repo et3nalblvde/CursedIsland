@@ -85,8 +85,12 @@ class Menu:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.show_pause_menu = not self.show_pause_menu
-                self.show_options_menu = False
+                if self.show_options_menu:
+                    self.show_options_menu = False
+                else:
+                    self.show_pause_menu = not self.show_pause_menu
+                self.ignore_next_click = True
+
             if self.show_pause_menu:
                 if event.key == pygame.K_DOWN:
                     self.selected_button = (self.selected_button + 1) % len(self.buttons)
@@ -104,20 +108,23 @@ class Menu:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
-                for i, button in enumerate(self.buttons):
-                    button_x = SCREEN_WIDTH // 2 - self.button_background.get_width() // 2 + self.x_offset
-                    button_y = SCREEN_HEIGHT // 2 - (
+                if self.show_pause_menu:
+                    for i, button in enumerate(self.buttons):
+                        button_x = SCREEN_WIDTH // 2 - self.button_background.get_width() // 2 + self.x_offset
+                        button_y = SCREEN_HEIGHT // 2 - (
                                 len(self.buttons) * self.button_background.get_height()) // 2 + i * (
-                                       self.button_background.get_height() + 50) + self.y_offset
-                    if (button_x <= mouse_x <= button_x + self.button_background.get_width() and
-                            button_y <= mouse_y <= button_y + self.button_background.get_height()):
-                        if button == self.text_data["main_menu"]["continue"]:
-                            self.show_pause_menu = False
-                        elif button == self.text_data["main_menu"]["settings"]:
-                            self.show_options_menu = True
-                            self.ignore_next_click = True
-                        elif button == self.text_data["main_menu"]["exit"]:
-                            pygame.event.post(pygame.event.Event(pygame.QUIT))
+                                           self.button_background.get_height() + 50) + self.y_offset
+                        if (button_x <= mouse_x <= button_x + self.button_background.get_width() and
+                                button_y <= mouse_y <= button_y + self.button_background.get_height()):
+                            if button == self.text_data["main_menu"]["continue"]:
+                                self.show_pause_menu = False
+                            elif button == self.text_data["main_menu"]["settings"]:
+                                self.show_options_menu = True
+                                self.ignore_next_click = True
+                            elif button == self.text_data["main_menu"]["exit"]:
+                                pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+        self.ignore_next_click = False
 
     def display(self, screen):
         if self.show_options_menu:
@@ -315,6 +322,76 @@ class Menu:
         self.language_settings["difficulty"] = difficulties[next_index]
         self.save_settings()
         self.load_text()
+
+    def ask_restart_for_language_change(self, screen, font, language_settings, current_language, new_language):
+        question_text = "Для применения изменений необходимо перезагрузить игру."
+        yes_text = "Да"
+        no_text = "Нет"
+
+        question_label = font.render(question_text, True, (0, 0, 255))
+        yes_label = font.render(yes_text, True, (0, 0, 255))
+        no_label = font.render(no_text, True, (0, 0, 255))
+
+        yes_button_width = yes_label.get_width() + 20
+        yes_button_height = yes_label.get_height() + 20
+        no_button_width = no_label.get_width() + 20
+        no_button_height = no_label.get_height() + 20
+
+        question_x = SCREEN_WIDTH // 2 - question_label.get_width() // 2
+        question_y = SCREEN_HEIGHT // 3
+        yes_x = SCREEN_WIDTH // 2 - yes_button_width // 2 - 60
+        yes_y = SCREEN_HEIGHT // 2 + 50
+        no_x = SCREEN_WIDTH // 2 - no_button_width // 2 + 60
+        no_y = SCREEN_HEIGHT // 2 + 50
+
+        pygame.mouse.set_visible(True)
+
+        while True:
+            screen.fill((255, 255, 255))
+
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            overlay.set_alpha(180)
+            overlay.fill((0, 0, 0))
+            screen.blit(overlay, (0, 0))
+
+            screen.blit(question_label, (question_x, question_y))
+            pygame.draw.rect(screen, (255, 0, 0), (yes_x, yes_y, yes_button_width, yes_button_height), 2)
+            pygame.draw.rect(screen, (255, 0, 0), (no_x, no_y, no_button_width, no_button_height), 2)
+            screen.blit(yes_label, (yes_x + 10, yes_y + 10))
+            screen.blit(no_label, (no_x + 10, no_y + 10))
+
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if pygame.mouse.get_pressed()[0]:
+                if yes_x < mouse_x < yes_x + yes_button_width and yes_y < mouse_y < yes_y + yes_button_height:
+                    language_settings["language"] = new_language
+                    self.save_settings()
+                    pygame.quit()
+                    quit()
+                elif no_x < mouse_x < no_x + no_button_width and no_y < mouse_y < no_y + no_button_height:
+                    return False
+
+            pygame.time.wait(10)
+
+    def change_language(self, new_language):
+        current_language = self.language
+        self.language = new_language
+        self.language_settings["language"] = new_language
+
+        if self.ask_restart_for_language_change(self.screen, self.font, self.language_settings, current_language,
+                                                new_language):
+            self.load_text()
+            self.save_settings()
+        else:
+            self.language = current_language
+            self.language_settings["language"] = current_language
+            self.load_text()
 
     def save_settings(self):
         with open("config/game_settings.json", "w", encoding="utf-8") as file:
