@@ -1,0 +1,12 @@
+{
+    "location": 1,
+    "character": {
+        "x": 1570,
+        "y": 380,
+        "health": 100
+    },
+    "progress": {
+        "current_dialogue": 0
+    },
+    "inventory": []
+}

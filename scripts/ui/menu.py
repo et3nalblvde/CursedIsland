@@ -103,7 +103,7 @@ class Menu:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
 
-                # Если открыто меню настроек, игнорировать клики по главному меню
+
                 if self.show_options_menu:
                     return
 

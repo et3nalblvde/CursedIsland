@@ -1,11 +1,11 @@
 import pygame
 import json
 
-
 class DialogueBox:
-    def __init__(self, font, display_dialogues=True):
+    def __init__(self, font, character, display_dialogues=True):
         self.font = pygame.font.Font(font, 48)
         self.display_dialogues = display_dialogues
+        self.character = character
 
         self.language = self.load_language_setting()
         self.dialogues = self.load_dialogues()
@@ -81,6 +81,9 @@ class DialogueBox:
                 self.current_dialogue += 1
                 self.character_name_displayed = False
 
+                if self.current_dialogue <= len(self.dialogues) - 1:
+                    self.save_game()
+
     def render(self, screen):
         if self.display_dialogues and self.current_dialogue >= 0:
             screen.blit(self.dialogue_box_sprite, self.dialogue_box_rect)
@@ -112,3 +115,24 @@ class DialogueBox:
                 text_surface = self.font.render(line, True, (255, 255, 255))
                 screen.blit(text_surface, (self.text_x, current_y))
                 current_y += self.font.get_height()
+
+    def save_game(self):
+        game_data = {
+            "location": 1,
+            "character": {
+                "x": self.character.rect.x,
+                "y": self.character.rect.y,
+                "health": self.character.health
+            },
+            "progress": {
+                "current_dialogue": self.current_dialogue
+            },
+            "inventory": []
+        }
+
+
+        with open("config/save_game.json", 'w', encoding='utf-8') as file:
+            json.dump(game_data, file, ensure_ascii=False, indent=4)
+
+        print(f"Игра сохранена! Текущий диалог: {self.current_dialogue}")
+

@@ -79,6 +79,28 @@ class MainMenu:
             frames.append(frame_image)
         return frames
 
+    def load_game_data(self):
+        try:
+            with open('config/save_game.json', 'r') as save_file:
+                save_data = json.load(save_file)
+                return save_data
+        except FileNotFoundError:
+            return None
+        except json.JSONDecodeError:
+            return None
+
+    def clear_save_data(self):
+
+        save_file_path = 'config/save_game.json'
+
+
+        try:
+            with open(save_file_path, 'w') as save_file:
+                json.dump({}, save_file)
+            print("Сохраненные данные очищены.")
+        except Exception as e:
+            print(f"Ошибка при очистке файла {save_file_path}: {e}")
+
     def play_menu_music(self):
         current_time = pygame.time.get_ticks()
         if self.music_start_time is None:
@@ -87,7 +109,7 @@ class MainMenu:
         if current_time - self.music_start_time >= self.music_delay:
             if not self.music_playing:
                 pygame.mixer.music.load(self.menu_music_path)
-                pygame.mixer.music.set_volume(self.settings.volume)  # Устанавливаем громкость в зависимости от настроек
+                pygame.mixer.music.set_volume(self.settings.volume)
                 pygame.mixer.music.play(-1)
                 self.music_playing = True
 
@@ -108,16 +130,12 @@ class MainMenu:
     def handle_mouse_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
 
-        # Если главное меню не открыто, клики игнорируются
+
         if not self.show_main_menu:
             return
 
-        # Если прошло недостаточно времени с последнего клика
-        if current_time - self.last_click_time < self.click_delay:
-            return
 
-        # Если открыто меню настроек или кнопка "Продолжить" нажата, клики игнорируются
-        if self.show_options_menu or self.is_continue_pressed:
+        if current_time - self.last_click_time < self.click_delay:
             return
 
         button_coords = []
@@ -140,20 +158,22 @@ class MainMenu:
 
                 self.last_click_time = current_time
 
-                if button_text == 'Продолжить':
-                    self.is_continue_pressed = True
+                if button_text == self.button_texts[0]:
+                    self.continue_game()
                     return
 
-                elif button_text == 'Начать игру':
+                elif button_text == self.button_texts[1]:
                     self.is_game_running = True
                     self.start_game()
                     return
 
-                elif button_text == 'Выход':
-                    self.quit_game()
+                elif button_text == self.button_texts[2]:
+                    self.show_options_menu = True
                     return
 
-                self.execute_action(button_text)
+                elif button_text == self.button_texts[3]:
+                    self.quit_game()
+                    return
 
     def handle_options_menu_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
@@ -358,8 +378,72 @@ class MainMenu:
         quit()
 
     def start_game(self):
+        self.clear_save_data()
         self.stop_menu_music()
+
+        save_data = {
+            "location": 1,
+            "character": {
+                "x": 510,
+                "y": 660,
+                "health": 100
+            },
+            "progress": {
+                "current_dialogue": 1
+            },
+            "inventory": []
+        }
+
+
+        try:
+            with open('config/save_game.json', 'w') as save_file:
+                json.dump(save_data, save_file, indent=4)
+            print("Данные для новой игры записаны.")
+        except Exception as e:
+            print(f"Ошибка при записи в файл сохранений: {e}")
+
         start_game_in_cabin(DISPLAYSURF)
+
+    def continue_game(self):
+        print("Функция continue_game вызвана!")
+
+        try:
+
+            with open("config/save_game.json", "r") as file:
+                save_data = json.load(file)
+
+            print("Данные сохранения:", save_data)
+
+
+            character_data = save_data.get("character", {})
+            character_x = character_data.get("x")
+            character_y = character_data.get("y")
+
+
+            if character_x is None or character_y is None:
+                raise ValueError("Ошибка: координаты персонажа не найдены в сохранении.")
+
+
+            inventory = save_data.get("inventory", [])
+            current_dialogue = save_data.get("progress", {}).get("current_dialogue", 1)
+
+
+            start_game_in_cabin(DISPLAYSURF, character_x, character_y, inventory, current_dialogue)
+
+        except FileNotFoundError:
+            print("Файл сохранения не найден.")
+
+            start_game_in_cabin(DISPLAYSURF)
+
+        except json.JSONDecodeError:
+            print("Ошибка при чтении файла сохранения.")
+
+            start_game_in_cabin(DISPLAYSURF)
+
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+
+            start_game_in_cabin(DISPLAYSURF)
 
     def display_options_menu(self, surface):
         option_texts = [
