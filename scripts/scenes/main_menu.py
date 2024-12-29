@@ -108,20 +108,16 @@ class MainMenu:
     def handle_mouse_click(self, mouse_x, mouse_y):
         current_time = pygame.time.get_ticks()
 
-
-        if not self.show_main_menu or self.is_game_running:
+        # Если главное меню не открыто, клики игнорируются
+        if not self.show_main_menu:
             return
 
-        if self.is_game_running:
-            return
-
+        # Если прошло недостаточно времени с последнего клика
         if current_time - self.last_click_time < self.click_delay:
             return
 
-        if self.show_options_menu:
-            return
-
-        if self.is_continue_pressed:
+        # Если открыто меню настроек или кнопка "Продолжить" нажата, клики игнорируются
+        if self.show_options_menu or self.is_continue_pressed:
             return
 
         button_coords = []

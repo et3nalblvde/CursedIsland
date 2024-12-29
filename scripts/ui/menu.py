@@ -2,6 +2,7 @@ import pygame
 import json
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, DEFAULT_FONT, FONT_SIZE, IMAGES_DIR
 
+
 class Menu:
     def __init__(self):
         self.language_settings = self.load_game_settings()
@@ -49,16 +50,13 @@ class Menu:
         with open(f"localization/{self.language}.json", "r", encoding="utf-8") as file:
             self.text_data = json.load(file)
 
-
         volume_text = self.text_data["settings_menu"]["volume"].format(
             volume=int(self.language_settings.get('volume', 1.0) * 100))
         change_language_text = f"{self.text_data.get('change_language', 'Смена языка')}: {self.language.upper()}"
 
-
         autosave_status_list = ["Выключено", "Включено"]
         autosave_status = autosave_status_list[int(self.language_settings.get('autosave', False))]
         autosave_text = self.text_data["settings_menu"]["autosave"].format(status=autosave_status)
-
 
         difficulty_status_list = ["Легко", "Средне", "Трудно"]
         difficulty_status = difficulty_status_list.index(self.language_settings.get('difficulty', 'Средне'))
@@ -104,10 +102,15 @@ class Menu:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
+
+                # Если открыто меню настроек, игнорировать клики по главному меню
+                if self.show_options_menu:
+                    return
+
                 for i, button in enumerate(self.buttons):
                     button_x = SCREEN_WIDTH // 2 - self.button_background.get_width() // 2 + self.x_offset
                     button_y = SCREEN_HEIGHT // 2 - (
-                                len(self.buttons) * self.button_background.get_height()) // 2 + i * (
+                            len(self.buttons) * self.button_background.get_height()) // 2 + i * (
                                        self.button_background.get_height() + 50) + self.y_offset
                     if (button_x <= mouse_x <= button_x + self.button_background.get_width() and
                             button_y <= mouse_y <= button_y + self.button_background.get_height()):
@@ -125,7 +128,7 @@ class Menu:
         elif self.show_pause_menu:
             screen.blit(self.alpha_surface, (0, 0))
             y_offset = SCREEN_HEIGHT // 2 - (
-                        len(self.buttons) * self.button_background.get_height()) // 2 + self.y_offset
+                    len(self.buttons) * self.button_background.get_height()) // 2 + self.y_offset
             for i, button in enumerate(self.buttons):
                 button_x = SCREEN_WIDTH // 2 - self.button_background.get_width() // 2 + self.x_offset
                 button_y = y_offset + i * (self.button_background.get_height() + 30)
@@ -144,7 +147,8 @@ class Menu:
                 text_y = button_y + (self.button_background.get_height() - button_text.get_height()) // 2
                 screen.blit(button_text, (text_x, text_y))
 
-                pygame.draw.rect(screen, (255, 0, 0), (button_x, button_y, self.button_background.get_width(), self.button_background.get_height()), 3)
+                pygame.draw.rect(screen, (255, 0, 0), (
+                    button_x, button_y, self.button_background.get_width(), self.button_background.get_height()), 3)
 
     def update(self, screen, event, clock):
         self.handle_input(event)
@@ -175,7 +179,6 @@ class Menu:
 
             pygame.draw.rect(surface, (255, 0, 0), (option_bg_x, option_bg_y, bg_width, bg_height), 3)
 
-
         volume_up_label = self.font.render("+", True, (0, 0, 255))
         volume_down_label = self.font.render("-", True, (0, 0, 255))
         volume_button_width = volume_up_label.get_width() + 20
@@ -195,7 +198,8 @@ class Menu:
         surface.blit(volume_down_label, (volume_down_x + 10, volume_down_y + 10))
         surface.blit(volume_up_label, (volume_up_x + 10, volume_up_y + 10))
 
-        pygame.draw.rect(surface, (255, 0, 0), (volume_down_x, volume_down_y, volume_button_width, volume_button_height), 3)
+        pygame.draw.rect(surface, (255, 0, 0),
+                         (volume_down_x, volume_down_y, volume_button_width, volume_button_height), 3)
         pygame.draw.rect(surface, (255, 0, 0), (volume_up_x, volume_up_y, volume_button_width, volume_button_height), 3)
 
         back_label = self.font.render(self.back_label_text, True, (0, 0, 255))
@@ -251,7 +255,6 @@ class Menu:
                         elif i == 3:
                             self.change_difficulty()
                         self.last_click_time = current_time
-
 
         volume_button_width = 60
         volume_button_height = 40
