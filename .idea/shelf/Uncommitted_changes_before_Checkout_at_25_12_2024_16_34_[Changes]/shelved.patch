@@ -1,0 +1,14 @@
+Index: config/game_settings.csv
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Volume,Fullscreen,Autosave,Difficulty\r\n1.0,False,False,Легко\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config/game_settings.csv b/config/game_settings.csv
+--- a/config/game_settings.csv	(revision 70b2b77296cd1b3c76bba6c4d0020e9bbe0c9379)
++++ b/config/game_settings.csv	(date 1735133652223)
+@@ -1,2 +1,2 @@
+ Volume,Fullscreen,Autosave,Difficulty
+-1.0,False,False,Легко
++1.0,True,False,Легко

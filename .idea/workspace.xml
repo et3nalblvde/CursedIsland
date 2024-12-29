@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6ba8ed70-db3a-4b3b-9583-7fae8a8b0131" name="Changes" comment="бетабетабетабета">
+      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/localization/ru.json" beforeDir="false" afterPath="$PROJECT_DIR$/localization/ru.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/scenes/main_menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/scenes/main_menu.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/ui/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ui/menu.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master-test" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;et3nalblvde&quot;
+  }
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="et3nal" />
+                    <option name="lastUsedInstant" value="1735374216" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="master-test" />
+                    <option name="lastUsedInstant" value="1735374076" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1735134478" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/et3nalblvde/CursedIsland&quot;,
+    &quot;accountId&quot;: &quot;fc7f7089-56e6-442b-8aac-8583ca86ce6f&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2qeoIB0eeHl5dyPSr3flbFFPMOu" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.game.executor": "Run",
+    "Python.main_menu.executor": "Run",
+    "Python.test.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "et3nal",
+    "last_opened_file_path": "C:/Users/aroki/PycharmProjects/CursedIsland/audio/sounds",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\audio\sounds" />
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\assets\images" />
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\assets\videos" />
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\assets\UI" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\assets\images" />
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\assets\cursor" />
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\scripts" />
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\assets\fonts" />
+      <recent name="C:\Users\aroki\PycharmProjects\CursedIsland\assets\Icons" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.game">
+    <configuration name="game" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CursedIsland" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/game.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="CursedIsland" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main_menu" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CursedIsland" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scripts/scenes" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/scenes/main_menu.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CursedIsland" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.game" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.main_menu" />
+        <item itemvalue="Python.game" />
+        <item itemvalue="Python.main_menu" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23726.102" />
+        <option value="bundled-python-sdk-5e1850174b45-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23726.102" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6ba8ed70-db3a-4b3b-9583-7fae8a8b0131" name="Changes" comment="" />
+      <created>1735032320147</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1735032320147</updated>
+      <workItem from="1735032321579" duration="2604000" />
+      <workItem from="1735035032827" duration="16671000" />
+      <workItem from="1735118061512" duration="16934000" />
+      <workItem from="1735203330432" duration="13236000" />
+      <workItem from="1735294096986" duration="10307000" />
+      <workItem from="1735374023351" duration="313000" />
+      <workItem from="1735447488628" duration="4040000" />
+    </task>
+    <task id="LOCAL-00001" summary="create CursedIsland">
+      <option name="closed" value="true" />
+      <created>1735033685936</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1735033685936</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add .gitignore">
+      <option name="closed" value="true" />
+      <created>1735033828742</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1735033828742</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add plan.txt">
+      <option name="closed" value="true" />
+      <created>1735034078860</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1735034078860</updated>
+    </task>
+    <task id="LOCAL-00004" summary="добавлены картинки курсора и бэкграунда в меню">
+      <option name="closed" value="true" />
+      <created>1735040376637</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040376637</updated>
+    </task>
+    <task id="LOCAL-00005" summary="реализован файл __init__.py для импорта файлов и библиотек">
+      <option name="closed" value="true" />
+      <created>1735040406324</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040406324</updated>
+    </task>
+    <task id="LOCAL-00006" summary="реализованы основные настройки">
+      <option name="closed" value="true" />
+      <created>1735040424898</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040424898</updated>
+    </task>
+    <task id="LOCAL-00007" summary="добавлен шрифт">
+      <option name="closed" value="true" />
+      <created>1735040437228</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040437228</updated>
+    </task>
+    <task id="LOCAL-00008" summary="реализовано главное меню">
+      <option name="closed" value="true" />
+      <created>1735040463016</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040463016</updated>
+    </task>
+    <task id="LOCAL-00009" summary="добавлены файлы для дальнейшей реализации">
+      <option name="closed" value="true" />
+      <created>1735040483374</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040483374</updated>
+    </task>
+    <task id="LOCAL-00010" summary="добавлен исполняющий файл">
+      <option name="closed" value="true" />
+      <created>1735040495272</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040495272</updated>
+    </task>
+    <task id="LOCAL-00011" summary="добавлен gif фона главного меню">
+      <option name="closed" value="true" />
+      <created>1735040785953</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1735040785953</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Добавлены настройки в главное меню">
+      <option name="closed" value="true" />
+      <created>1735051737041</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1735051737041</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Изменена главная тема главного меню">
+      <option name="closed" value="true" />
+      <created>1735051751926</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1735051751926</updated>
+    </task>
+    <task id="LOCAL-00014" summary="добавлен csv файл настроек">
+      <option name="closed" value="true" />
+      <created>1735121478072</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1735121478072</updated>
+    </task>
+    <task id="LOCAL-00015" summary="изменена часть настроек">
+      <option name="closed" value="true" />
+      <created>1735121501975</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1735121501975</updated>
+    </task>
+    <task id="LOCAL-00016" summary="дописана составляющая файла game.py">
+      <option name="closed" value="true" />
+      <created>1735121516332</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1735121516332</updated>
+    </task>
+    <task id="LOCAL-00017" summary="недофикшенные настройки">
+      <option name="closed" value="true" />
+      <created>1735132046045</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1735132046045</updated>
+    </task>
+    <task id="LOCAL-00018" summary="добавлена возможность смены языка">
+      <option name="closed" value="true" />
+      <created>1735133523939</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1735133523939</updated>
+    </task>
+    <task id="LOCAL-00019" summary="добавлены некоторые файлы в проект">
+      <option name="closed" value="true" />
+      <created>1735204877007</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1735204877007</updated>
+    </task>
+    <task id="LOCAL-00020" summary="разработка стартовой локации">
+      <option name="closed" value="true" />
+      <created>1735210216128</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1735210216128</updated>
+    </task>
+    <task id="LOCAL-00021" summary="написаны бета функции для первой локации">
+      <option name="closed" value="true" />
+      <created>1735216536562</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1735216536562</updated>
+    </task>
+    <task id="LOCAL-00022" summary="исправлена ошибка по причине которой не запускалась игра">
+      <option name="closed" value="true" />
+      <created>1735216603738</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1735216603738</updated>
+    </task>
+    <task id="LOCAL-00023" summary="фикс кнопок главного меню(не до конца)">
+      <option name="closed" value="true" />
+      <created>1735298078615</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1735298078615</updated>
+    </task>
+    <task id="LOCAL-00024" summary="написано меню в игре и настройки в меню(в бетке, не факт что работают)">
+      <option name="closed" value="true" />
+      <created>1735302203067</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1735302203067</updated>
+    </task>
+    <task id="LOCAL-00025" summary="бетабетабетабета">
+      <option name="closed" value="true" />
+      <created>1735302554069</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1735302554069</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="master" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="*" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master/master-test" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="create CursedIsland" />
+    <MESSAGE value="add .gitignore" />
+    <MESSAGE value="add plan.txt" />
+    <MESSAGE value="добавлены картинки курсора и бэкграунда в меню" />
+    <MESSAGE value="реализован файл __init__.py для импорта файлов и библиотек" />
+    <MESSAGE value="реализованы основные настройки" />
+    <MESSAGE value="добавлен шрифт" />
+    <MESSAGE value="реализовано главное меню" />
+    <MESSAGE value="добавлены файлы для дальнейшей реализации" />
+    <MESSAGE value="добавлен исполняющий файл" />
+    <MESSAGE value="добавлен gif фона главного меню" />
+    <MESSAGE value="Добавлены настройки в главное меню" />
+    <MESSAGE value="Изменена главная тема главного меню" />
+    <MESSAGE value="добавлен csv файл настроек" />
+    <MESSAGE value="изменена часть настроек" />
+    <MESSAGE value="дописана составляющая файла game.py" />
+    <MESSAGE value="недофикшенные настройки" />
+    <MESSAGE value="добавлена возможность смены языка" />
+    <MESSAGE value="добавлены некоторые файлы в проект" />
+    <MESSAGE value="разработка стартовой локации" />
+    <MESSAGE value="написаны бета функции для первой локации" />
+    <MESSAGE value="исправлена ошибка по причине которой не запускалась игра" />
+    <MESSAGE value="фикс кнопок главного меню(не до конца)" />
+    <MESSAGE value="написано меню в игре и настройки в меню(в бетке, не факт что работают)" />
+    <MESSAGE value="бетабетабетабета" />
+    <option name="LAST_COMMIT_MESSAGE" value="бетабетабетабета" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/ui/menu.py</url>
+          <line>4</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/ui/menu.py</url>
+          <line>84</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/ui/menu.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/scenes/main_menu.py</url>
+          <line>511</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CursedIsland$main_menu.coverage" NAME="main_menu Coverage Results" MODIFIED="1735374086601" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scripts/scenes" />
+    <SUITE FILE_PATH="coverage/CursedIsland$test.coverage" NAME="test Coverage Results" MODIFIED="1735447585710" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CursedIsland$game.coverage" NAME="game Coverage Results" MODIFIED="1735451551845" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
