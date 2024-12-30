@@ -12,7 +12,6 @@ from scripts.ui.menu import Menu
 from scripts.characters.player import Character
 from scripts.scenes.save_load import save_game
 
-
 class CollisionZone:
     def __init__(self, x, y, width, height, color=(255, 0, 0)):
         self.rect = pygame.Rect(x, y, width, height)
@@ -37,7 +36,6 @@ class CollisionZone:
     def render(self, screen):
         pygame.draw.rect(screen, self.color, self.rect, 2)
 
-
 def start_game_in_cabin(screen, character_x=510, character_y=660, inventory=None, current_dialogue=0):
     clock = pygame.time.Clock()
     background = pygame.image.load('assets/locations/ship_room.png').convert()
@@ -51,14 +49,16 @@ def start_game_in_cabin(screen, character_x=510, character_y=660, inventory=None
 
     character = Character('assets/characters/character_sprite.png', character_x, character_y)
 
+
     bed_zone = CollisionZone(x_offset + 60, y_offset + 700, 290, 150, color=(255, 0, 0))
     table_zone = CollisionZone(x_offset + 1, y_offset + 30, 1800, 300, color=(0, 255, 0))
     crates_zone = CollisionZone(x_offset + 1375, y_offset + 700, 325, 325, color=(0, 0, 255))
 
+
     door_zone = CollisionZone(x_offset + 910, y_offset + 320, 90, 90, color=(255, 255, 0))
     shelf_zone = CollisionZone(x_offset + 1750, y_offset + 0, 420, 1700, color=(255, 165, 0))
-    window_zone = CollisionZone(x_offset + 20, y_offset + 1450, 1725, 50, color=(0, 255, 255))
-    cabinet_zone = CollisionZone(x_offset - 400, y_offset + 0, 420, 1700, color=(255, 255, 255))
+    window_zone = CollisionZone(x_offset +20, y_offset +1450, 1725, 50, color=(0, 255, 255))
+    cabinet_zone = CollisionZone(x_offset-400, y_offset + 0, 420, 1700, color=(255, 255, 255))
 
     alpha_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
     alpha_surface.fill((0, 0, 0))
@@ -106,6 +106,7 @@ def start_game_in_cabin(screen, character_x=510, character_y=660, inventory=None
         keys = pygame.key.get_pressed()
         character.update(keys)
 
+
         bed_zone.check_collision(character.rect)
         table_zone.check_collision(character.rect)
         crates_zone.check_collision(character.rect)
@@ -113,6 +114,7 @@ def start_game_in_cabin(screen, character_x=510, character_y=660, inventory=None
         shelf_zone.check_collision(character.rect)
         window_zone.check_collision(character.rect)
         cabinet_zone.check_collision(character.rect)
+
 
         bed_zone.render(screen)
         table_zone.render(screen)
