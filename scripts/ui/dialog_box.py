@@ -10,8 +10,9 @@ class DialogueBox:
         self.language = self.load_language_setting()
         self.dialogues = self.load_dialogues()
 
-        self.current_dialogue = -1
+        self.current_dialogue = 0
         self.text_speed = 2
+        self.load_game()
 
         self.text_progress = 0
         self.dialogue_text = ""
@@ -66,6 +67,7 @@ class DialogueBox:
 
     def update_text(self):
         if self.is_typing:
+
             if self.text_progress < len(self.dialogues[self.current_dialogue]["text"]):
                 self.dialogue_text += self.dialogues[self.current_dialogue]["text"][self.text_progress]
                 self.text_progress += 1
@@ -74,15 +76,17 @@ class DialogueBox:
             else:
                 self.is_typing = False
         else:
-            if pygame.key.get_pressed()[pygame.K_SPACE]:
-                self.is_typing = True
-                self.text_progress = 0
-                self.dialogue_text = ""
-                self.current_dialogue += 1
-                self.character_name_displayed = False
 
-                if self.current_dialogue <= len(self.dialogues) - 1:
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                if self.current_dialogue < len(self.dialogues) - 1:
+                    self.current_dialogue += 1
+                    self.text_progress = 0
+                    self.dialogue_text = ""
+                    self.character_name_displayed = False
+                    self.is_typing = True
                     self.save_game()
+                else:
+                    self.current_dialogue = len(self.dialogues) - 1
 
     def render(self, screen):
         if self.display_dialogues and self.current_dialogue >= 0:
@@ -130,9 +134,26 @@ class DialogueBox:
             "inventory": []
         }
 
-
         with open("config/save_game.json", 'w', encoding='utf-8') as file:
             json.dump(game_data, file, ensure_ascii=False, indent=4)
 
         print(f"Игра сохранена! Текущий диалог: {self.current_dialogue}")
+
+    def load_game(self):
+        try:
+            with open("config/save_game.json", 'r', encoding='utf-8') as file:
+                game_data = json.load(file)
+
+
+            self.current_dialogue = game_data["progress"].get("current_dialogue", 0)
+
+
+            self.character.rect.x = game_data["character"].get("x", 510)
+            self.character.rect.y = game_data["character"].get("y", 660)
+
+            print(f"Игра загружена! Текущий диалог: {self.current_dialogue}")
+        except FileNotFoundError:
+            print("Файл сохранения не найден. Начало новой игры.")
+        except KeyError as e:
+            print(f"Ошибка загрузки сохранения: отсутствует ключ {e}. Начало новой игры.")
 

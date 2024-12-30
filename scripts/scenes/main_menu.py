@@ -90,14 +90,25 @@ class MainMenu:
             return None
 
     def clear_save_data(self):
-
         save_file_path = 'config/save_game.json'
 
+        default_data = {
+            "location": 1,
+            "character": {
+                "x": 510,
+                "y": 660,
+                "health": 100
+            },
+            "progress": {
+                "current_dialogue": 0
+            },
+            "inventory": []
+        }
 
         try:
-            with open(save_file_path, 'w') as save_file:
-                json.dump({}, save_file)
-            print("Сохраненные данные очищены.")
+            with open(save_file_path, 'w', encoding='utf-8') as save_file:
+                json.dump(default_data, save_file, ensure_ascii=False, indent=4)
+            print("Сохраненные данные сброшены на начальные значения.")
         except Exception as e:
             print(f"Ошибка при очистке файла {save_file_path}: {e}")
 
